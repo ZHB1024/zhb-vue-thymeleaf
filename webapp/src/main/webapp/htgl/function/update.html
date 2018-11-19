@@ -1,9 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" isELIgnored="false"%>
-<%
-String ctxPath = request.getContextPath();
-%>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{htgl/layout/htgl_layout}">
 
-<div id="app_content" style="height: 100%">
+<div id="app_content" style="height: 100%" layout:fragment="content">
     <Layout :style="{padding: '0 24px 24px', height: '100%'}"> 
         <Breadcrumb :style="{margin: '24px 0'}"> 
             <breadcrumb-item><a href="">首页</a></breadcrumb-item> 
@@ -16,7 +15,6 @@ String ctxPath = request.getContextPath();
             <div style="width: 600px;margin-left:  auto;margin-right:  auto;">
             	<i-form method="post" action="" ref="formValidate" :model="functionInfo" :rules="ruleValidate" :label-width="80">
                 	<input type="hidden" name="id" v-model="functionInfo.id"/>
-                	
                 	
                 	<form-item label="父节点" prop="parentId">
                 	  <i-select name="parentId" v-model="functionInfo.parentId" @on-change="getMaxOrder" placeholder="请选择父节点">
@@ -60,18 +58,17 @@ String ctxPath = request.getContextPath();
 </div>
 
 
-<script type="text/javascript">
-var functionInfoJson = <%=request.getAttribute("functionInfoJson") %> ;
+<script layout:fragment="script" th:inline="javascript">
 var myVue =  new Vue({
 	  el: '#app_content',
 	  data:{
 		  functionInfo:{
-			  id:functionInfoJson.id,
-			  name:functionInfoJson.name,
-			  path:functionInfoJson.path,
-			  iconId:functionInfoJson.iconId,
-			  order:functionInfoJson.order,
-			  parentId:functionInfoJson.parentId
+			  id:[[${functionInfoJson.id}]],
+			  name:[[${functionInfoJson.name}]],
+			  path:[[${functionInfoJson.path}]],
+			  iconId:[[${functionInfoJson.iconId}]],
+			  order:[[${functionInfoJson.order}]],
+			  parentId:[[${functionInfoJson.parentId}]]
 		  },
 		  parentFunctions:[],
 		  icons:[],
@@ -91,8 +88,8 @@ var myVue =  new Vue({
 	  },
 	  created: function () {
 		  axios.all([
-	    	    axios.get('<%=ctxPath %>/htgl/functioninfocontroller/getparentfunctions/api'),
-	    	    axios.get('<%=ctxPath %>/htgl/iconinfocontroller/geticoninfo/api')
+	    	    axios.get('/htgl/functioninfocontroller/getparentfunctions/api'),
+	    	    axios.get('/htgl/iconinfocontroller/geticoninfo/api')
 	    	  ]).then(axios.spread(function (funinfoResp,iconResp) {
 	    		  myVue.parentFunctions = funinfoResp.data.data;
 	    		  myVue.icons = iconResp.data.data;
@@ -109,7 +106,7 @@ var myVue =  new Vue({
 		          	  	param.append("path",myVue.functionInfo.path); 
 		          	  	param.append("iconId",myVue.functionInfo.iconId); 
 		          	  	param.append("order",myVue.functionInfo.order); 
-		          	  	axios.post('<%=ctxPath%>/htgl/functioninfocontroller/updatefunctioninfo/api', param)
+		          	  	axios.post('/htgl/functioninfocontroller/updatefunctioninfo/api', param)
 		          		  	 .then(function (response) {
 		          			  	 if(response.data.flag){
 		          			  		myVue.$Message.success({
@@ -117,7 +114,7 @@ var myVue =  new Vue({
 		                                duration: 3,
 		                                closable: true
 		                            });
-		          			  	    window.location.href='<%=ctxPath%>/htgl/functioninfocontroller/toindex';
+		          			  	    window.location.href='/htgl/functioninfocontroller/toindex';
 		                        }else{
 		                      	  myVue.$Message.warning({
 		                                content: response.data.errorMessages,
@@ -136,7 +133,7 @@ var myVue =  new Vue({
 	        getMaxOrder:function(parentId){
 	        	let param = new URLSearchParams(); 
 	       	  	param.append("parentId",parentId); 
-	       	  	axios.post('<%=ctxPath %>/htgl/functioninfocontroller/getmaxorder/api', param)
+	       	  	axios.post('/htgl/functioninfocontroller/getmaxorder/api', param)
 	       		  	.then(function (response) {
 	       			  	if(response.data.flag){
 	       			  		myVue.functionInfo.order=response.data.data;

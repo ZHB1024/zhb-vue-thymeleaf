@@ -228,11 +228,16 @@ public class Data2JSONUtil {
         if (null != data.getIconInfoData()) {
             jsonObject.put("icon", data.getIconInfoData().getName());
             jsonObject.put("iconId", data.getIconInfoData().getId());
+        }else {
+            jsonObject.put("icon", "");
+            jsonObject.put("iconId", "");
         }
         jsonObject.put("order", data.getOrder());
         jsonObject.put("deleteFlag", data.getDeleteFlag());
         if (null != data.getParentFunctionInfo()) {
             jsonObject.put("parentId", data.getParentFunctionInfo().getId());
+        }else {
+            jsonObject.put("parentId", "");
         }
         
         return jsonObject;

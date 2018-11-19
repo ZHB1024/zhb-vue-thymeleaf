@@ -1,11 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" isELIgnored="false"%>
-<%
-String ctxPath = request.getContextPath();
-%>
-<div id="app_content" v-cloak style="height: 100%">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{htgl/layout/htgl_layout}">
+      
+<div id="app_content" v-cloak style="height: 100%" layout:fragment="content">
     <Layout :style="{padding: '0 20px 20px'}"> 
         <Breadcrumb :style="{margin: '24px 0'}"> 
-            <breadcrumb-item><a href="<%=ctxPath%>/"><Icon type="md-home"></Icon></a></breadcrumb-item>
+            <breadcrumb-item><a href="/"><Icon type="md-home"></Icon></a></breadcrumb-item>
             <breadcrumb-item>功能管理</breadcrumb-item> 
             <breadcrumb-item>功能信息</breadcrumb-item> 
         </Breadcrumb> 
@@ -20,7 +20,7 @@ String ctxPath = request.getContextPath();
     </Layout>
 </div>
 
-<script type="x-template" id="expand-detail">
+<script type="x-template" id="expand-detail" layout:fragment="script" th:inline="javascript">
 <div>
   <Row v-for="record in row.children" class="expand-row">
     <i-col span="8">
@@ -54,7 +54,7 @@ String ctxPath = request.getContextPath();
   </Row>
 </div>
 </script>
-<script>
+<script layout:fragment="script" th:inline="javascript">
 Vue.component('newRow', {
 	  props: ['row'],
 	  template: '#expand-detail'
@@ -163,14 +163,14 @@ var myVue = new Vue({
     },
     created: function () {
     	axios.all([
-    	    axios.get('<%=ctxPath %>/htgl/functioninfocontroller/getfunctions/api')
+    	    axios.get('/htgl/functioninfocontroller/getfunctions/api')
     	  ]).then(axios.spread(function (funinfoResp) {
     		  myVue.tableDatas = funinfoResp.data.data;
     	  }));
     },
     methods: {
         modify: function (index) {
-    		window.location.href='<%=ctxPath%>/htgl/functioninfocontroller/toupdate?id='+myVue.tableDatas[index].id;
+    		window.location.href='/htgl/functioninfocontroller/toupdate?id='+myVue.tableDatas[index].id;
       	},
        remove: function (index) {
     	   myVue.$Modal.confirm({
@@ -179,7 +179,7 @@ var myVue = new Vue({
     	        onOk:function(){
     	        	let param = new URLSearchParams(); 
     	      	    param.append("id",myVue.tableDatas[index].id); 
-    	       	    axios.post('<%=ctxPath %>/htgl/functioninfocontroller/delfunctioninfo/api', param)
+    	       	    axios.post('/htgl/functioninfocontroller/delfunctioninfo/api', param)
     	      		  .then(function (response) {
     	      			  if(response.data.flag){
     	      				  myVue.$Message.success({
@@ -209,7 +209,7 @@ var myVue = new Vue({
                onOk:function(){
                		let param = new URLSearchParams(); 
              	    param.append("id",myVue.tableDatas[index].id); 
-             	    axios.post('<%=ctxPath %>/htgl/functioninfocontroller/openfunctioninfo/api', param)
+             	    axios.post('/htgl/functioninfocontroller/openfunctioninfo/api', param)
        		         .then(function (response) {
        			  		if(response.data.flag){
        			  			myVue.$Message.success({
@@ -238,7 +238,7 @@ var myVue = new Vue({
 //修改功能信息
 function toUpdate(data){
 	var id = data.getAttribute("update-id");
-	window.location.href='<%=ctxPath%>/htgl/functioninfocontroller/toupdate?id='+id;
+	window.location.href='/htgl/functioninfocontroller/toupdate?id='+id;
 };
 //删除功能信息
 function delRecord(data){
@@ -249,7 +249,7 @@ function delRecord(data){
         onOk:function(){
         	let param = new URLSearchParams(); 
       	    param.append("id",id); 
-       	    axios.post('<%=ctxPath %>/htgl/functioninfocontroller/delfunctioninfo/api', param)
+       	    axios.post('/htgl/functioninfocontroller/delfunctioninfo/api', param)
       		  .then(function (response) {
       			  if(response.data.flag){
       				  myVue.$Message.success({
@@ -281,7 +281,7 @@ function openRecord(data){
         onOk:function(){
         	let param = new URLSearchParams(); 
       	    param.append("id",id); 
-       	    axios.post('<%=ctxPath %>/htgl/functioninfocontroller/openfunctioninfo/api', param)
+       	    axios.post('/htgl/functioninfocontroller/openfunctioninfo/api', param)
       		  .then(function (response) {
       			  if(response.data.flag){
       				  myVue.$Message.success({

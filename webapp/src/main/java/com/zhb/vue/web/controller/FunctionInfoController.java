@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -56,7 +57,7 @@ public class FunctionInfoController {
     @RequestMapping(value="/toindex",method=RequestMethod.GET)
     @Transactional
     public String toIndex(HttpServletRequest request,HttpServletResponse response) {
-        return "htgl.function.index";
+        return "htgl/function/index";
     }
     
     //查询功能
@@ -91,7 +92,7 @@ public class FunctionInfoController {
     @RequestMapping(value="/toadd",method=RequestMethod.GET)
     @Transactional
     public String toAdd(HttpServletRequest request,HttpServletResponse response) {
-        return "htgl.function.add";
+        return "htgl/function/add";
     }
     
     //新增功能
@@ -173,7 +174,7 @@ public class FunctionInfoController {
     //toupdate
     @RequestMapping(value="/toupdate",method = RequestMethod.GET)
     @Transactional
-    public String toUpdate(HttpServletRequest request,HttpServletResponse response,FunctionInfoParam param) {
+    public String toUpdate(HttpServletRequest request,HttpServletResponse response,FunctionInfoParam param,Model model) {
         if (StringUtil.isBlank(param.getId())) {
             return WriteJSUtil.writeJS("非法操作", response);
         }
@@ -183,9 +184,9 @@ public class FunctionInfoController {
         }
         
         JSONObject object = Data2JSONUtil.functionInfoData2JSONObject(data);
-        request.setAttribute("functionInfoJson", object);
+        model.addAttribute("functionInfoJson", object);
         
-        return "htgl.function.update";
+        return "htgl/function/update";
     }
     
     //修改功能信息
