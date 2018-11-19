@@ -1,9 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" isELIgnored="false"%>
-<%
-String ctxPath = request.getContextPath();
-%>
-
-<div id="app_content" style="height: 100%">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{htgl/layout/htgl_layout}">
+      
+<div id="app_content" layout:fragment="content" style="height: 100%">
     <Layout :style="{padding: '0 24px 24px', height: '100%'}"> 
         <Breadcrumb :style="{margin: '24px 0'}"> 
             <breadcrumb-item><a href="">首页</a></breadcrumb-item> 
@@ -95,23 +94,22 @@ String ctxPath = request.getContextPath();
 </div>
 
 
-<script type="text/javascript">
-var userInfoJson = <%=request.getAttribute("userInfoJson") %> ;
+<script layout:fragment="script" th:inline="javascript">
 var myVue =  new Vue({
 	  el: '#app_content',
 	  data:{
 		  userInfo:{
-			  id:userInfoJson.id,
-			  userName:userInfoJson.userName,
-			  realName:userInfoJson.realName,
-			  birthday:userInfoJson.birthday,
-			  sex:userInfoJson.sex,
-			  identityCard:userInfoJson.identityCard,
-			  country:userInfoJson.country,
-			  nation:userInfoJson.nation,
-			  byyx:userInfoJson.byyx,
-			  mobilePhone:userInfoJson.mobilePhone,
-			  email:userInfoJson.email
+			  id:[[${userInfoJson.id}]],
+			  userName:[[${userInfoJson.userName}]],
+			  realName:[[${userInfoJson.realName}]],
+			  birthday:[[${userInfoJson.birthday}]],
+			  sex:[[${userInfoJson.sex}]],
+			  identityCard:[[${userInfoJson.identityCard}]],
+			  country:[[${userInfoJson.country}]],
+			  nation:[[${userInfoJson.nation}]],
+			  byyx:[[${userInfoJson.byyx}]],
+			  mobilePhone:[[${userInfoJson.mobilePhone}]],
+			  email:[[${userInfoJson.email}]]
 		  },
 		  countryParm:[],
 		  mzParm:[],
@@ -155,17 +153,17 @@ var myVue =  new Vue({
 	  },
 	  created: function () {
 		  axios.all([
-	    	    axios.get('<%=ctxPath %>/htgl/dicinfocontroller/getdicinfo/api', {
+	    	    axios.get('/htgl/dicinfocontroller/getdicinfo/api', {
 	    	    	params : { 
 	    	    		category : 'gjmc'
 	    	    	}
 	    	    }),
-	    	    axios.get('<%=ctxPath %>/htgl/dicinfocontroller/getdicinfo/api', {
+	    	    axios.get('/htgl/dicinfocontroller/getdicinfo/api', {
 	    	    	params : { 
 	    	    		category : 'mz'
 	    	    	}
 	    	    }),
-	    	    axios.get('<%=ctxPath %>/htgl/dicinfocontroller/getdicinfo/api', {
+	    	    axios.get('/htgl/dicinfocontroller/getdicinfo/api', {
 	    	    	params : { 
 	    	    		category : 'yx'
 	    	    	}
@@ -193,7 +191,7 @@ var myVue =  new Vue({
 		          	  	param.append("mobilePhone",myVue.userInfo.mobilePhone); 
 		          	  	param.append("email",myVue.userInfo.email); 
 		          	  	debugger;
-		          	  	axios.post('<%=ctxPath%>/htgl/userinfocontroller/updateselfinfo/api', param)
+		          	  	axios.post('/htgl/userinfocontroller/updateselfinfo/api', param)
 		          		  	 .then(function (response) {
 		          			  	 if(response.data.flag){
 		          			  		myVue.$Message.success({
@@ -201,7 +199,7 @@ var myVue =  new Vue({
 		                                duration: 3,
 		                                closable: true
 		                            });
-		          			  	    window.location.href='<%=ctxPath%>/htgl/userinfocontroller/toselfinfo';
+		          			  	    window.location.href='/htgl/userinfocontroller/toselfinfo';
 		                        }else{
 		                      	  myVue.$Message.warning({
 		                                content: response.data.errorMessages,

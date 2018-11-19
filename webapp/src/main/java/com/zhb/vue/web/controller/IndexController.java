@@ -23,9 +23,9 @@ public class IndexController {
     @Transactional
     public String index(HttpServletRequest request,HttpServletResponse response) {
         if (StringUtil.isBlank(WebAppUtil.getUserId(request))) {
-            return "login.index";
+            return "login/login";
         }
-        return "system.htgl.index";
+        return "htgl/index";
     }
 
 }

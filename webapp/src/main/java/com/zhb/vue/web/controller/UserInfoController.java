@@ -7,11 +7,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +49,7 @@ public class UserInfoController extends BaseController{
     @RequestMapping(value="/toindex",method=RequestMethod.GET)
     @Transactional
     public String toIndex(HttpServletRequest request,HttpServletResponse response) {
-        return "htgl.user.index";
+        return "htgl/user/index";
     }
     
     
@@ -90,10 +89,10 @@ public class UserInfoController extends BaseController{
     public String toSelfInfo(HttpServletRequest request,HttpServletResponse response) {
         UserInfoVO vo = WebAppUtil.getLoginInfoVO(request).getUserInfoVO();
         if (null == vo) {
-            return "login.index";
+            return "login/login";
         }
         
-        return "htgl.user.info";
+        return "htgl/user/info";
     }
     
     //获取个人信息
@@ -119,9 +118,9 @@ public class UserInfoController extends BaseController{
     public String toAdd(HttpServletRequest request,HttpServletResponse response) {
         UserInfoVO vo = WebAppUtil.getLoginInfoVO(request).getUserInfoVO();
         if (null == vo) {
-            return "login.index";
+            return "login/login";
         }
-        return "htgl.user.add";
+        return "htgl/user/add";
     }
     
     //新增一个用户
@@ -192,13 +191,13 @@ public class UserInfoController extends BaseController{
     //to修改用户个人信息
     @RequestMapping(value="/toupdate",method=RequestMethod.GET)
     @Transactional
-    public String toUpdate(HttpServletRequest request,HttpServletResponse response) {
+    public String toUpdate(HttpServletRequest request,HttpServletResponse response, Model model) {
         UserInfoVO vo = WebAppUtil.getLoginInfoVO(request).getUserInfoVO();
         if (null == vo) {
-            return "login.index";
+            return "login/login";
         }
-        request.setAttribute("userInfoJson", Data2JSONUtil.userInfoVO2JSONObject(vo));
-        return "htgl.user.update";
+        model.addAttribute("userInfoJson", Data2JSONUtil.userInfoVO2JSONObject(vo));
+        return "htgl/user/update";
     }
     
     //修改个人信息
@@ -253,9 +252,9 @@ public class UserInfoController extends BaseController{
     public String toModifyPassword(HttpServletRequest request,HttpServletResponse response) {
         UserInfoVO vo = WebAppUtil.getLoginInfoVO(request).getUserInfoVO();
         if (null == vo) {
-            return "login.index";
+            return "login/login";
         }
-        return "htgl.user.update.password";
+        return "htgl/user/modify_password";
     }
     
     //修改密码

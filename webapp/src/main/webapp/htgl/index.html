@@ -1,6 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{htgl/layout/htgl_layout_thymeleaf}">
+      layout:decorate="~{htgl/layout/htgl_layout}">
 
 <style scoped>
 .time{
@@ -12,7 +12,7 @@
 }
 </style>
 
-<div layout:fragment="content">
+<div id="app_content" layout:fragment="content">
     <Layout :style="{padding: '0 20px 20px'}"> 
         <Breadcrumb :style="{margin: '24px 0'}"> 
             <breadcrumb-item><a href="/"><Icon v-bind:type="homeIcon.value"></Icon></a></breadcrumb-item>

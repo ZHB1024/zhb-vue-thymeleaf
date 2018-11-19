@@ -28,7 +28,7 @@
 
 <!-- zhb-vue-thymeleaf -->
 		<dependency>
-			<groupId>com.zhb.vue</groupId>
+			<groupId>com.zhb.vue.thymeleaf</groupId>
 			<artifactId>zhb-vue-thymeleaf</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>

@@ -1,7 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" isELIgnored="false"%>
-<%
-String ctxPath = request.getContextPath();
-%>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{htgl/layout/htgl_layout}">
+      
 <style> 
 p{
 margin-top:20px;
@@ -9,7 +9,7 @@ margin-left:30px;
 }
 </style>
 
-<div id="app_content" style="height: 100%">
+<div id="app_content" layout:fragment="content" style="height: 100%">
     <Layout :style="{padding: '0 24px 24px', height: '100%'}"> 
         <Breadcrumb :style="{margin: '24px 0'}"> 
             <breadcrumb-item>首页</breadcrumb-item> 
@@ -23,7 +23,7 @@ margin-left:30px;
                   <Card :bordered="false">
                       <p slot="title">
                       个人信息
-                      <a href="<%=ctxPath%>/htgl/userinfocontroller/toupdate" slot="extra" >
+                      <a href="/htgl/userinfocontroller/toupdate" slot="extra" >
 			            <Icon type="ios-create" size="24"/>
 			          </a>
                       </p>
@@ -42,7 +42,7 @@ margin-left:30px;
                           <p>电话： {{userInfo.mobilePhone}}</p>
                           <p>邮箱： {{userInfo.email}}</p>
                           <p>密码：*********
-                          	<a  href="<%=ctxPath%>/htgl/userinfocontroller/tomodifypassword">
+                          	<a  href="/htgl/userinfocontroller/tomodifypassword">
                           		<Icon type="ios-create" size="15"/>
                           	</a>
                           </p>
@@ -78,7 +78,7 @@ margin-left:30px;
     </Layout>
 </div>
 
-<script>
+<script layout:fragment="script" th:inline="javascript">
 var myVue =  new Vue({
 	  el: '#app_content',
 	  data:{
@@ -100,10 +100,10 @@ var myVue =  new Vue({
 	  },
 	  created: function () {
 		  axios.all([
-	    	    axios.get('<%=ctxPath %>/htgl/userinfocontroller/getselfinfo/api')
+	    	    axios.get('/htgl/userinfocontroller/getselfinfo/api')
 	    	  ]).then(axios.spread(function (userInfoResp) {
 	    		  myVue.userInfo = userInfoResp.data.data;
-	    		  myVue.userInfo.headSrc = '<%=ctxPath%>/htgl/attachmentinfocontroller/getoriginalattachmentinfo?id=' + userInfoResp.data.data.lobId;
+	    		  myVue.userInfo.headSrc = '/htgl/attachmentinfocontroller/getoriginalattachmentinfo?id=' + userInfoResp.data.data.lobId;
 	    	  }));
 	 },
 	  methods:{
@@ -114,10 +114,10 @@ var myVue =  new Vue({
 			  var me_image = generatorLayerContent(url);
 			  popup('上传新头像',me_image);
 			  
-		      <%-- let param = new URLSearchParams(); 
+		      /* let param = new URLSearchParams(); 
 	    	  param.append("image",me_image); 
 	    	  param.append("id",myVue.userInfo.id); 
-	    	  axios.post('<%=ctxPath %>/htgl/attachmentinfocontroller/getlayercontent/api', param)
+	    	  axios.post('/htgl/attachmentinfocontroller/getlayercontent/api', param)
 	    		  .then(function (response) {
 	    			  if(response.data.flag){
 	  		            popup(response.data.data);
@@ -128,7 +128,7 @@ var myVue =  new Vue({
 	                          closable: true
 	                      });
 	                  }
-	    		  }) --%>
+	    		  }) */
          	 return false;// 返回 falsa 停止自动上传 我们需要手动上传
          },
          showHead:function(){

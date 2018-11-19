@@ -64,7 +64,7 @@ public class LoginController {
     @Transactional
     public String toLogin(HttpServletRequest request,HttpServletResponse response) {
         logger.info(String.valueOf(request.getAttribute("redirectUrl")));
-        return "login.index";
+        return "login/login";
     }
     
     //登录
