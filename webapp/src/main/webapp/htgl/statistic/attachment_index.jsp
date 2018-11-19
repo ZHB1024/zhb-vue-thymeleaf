@@ -1,0 +1,262 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
+    
+<%
+    String ctxPath = request.getContextPath();
+%>
+<div id="app_content" v-cloak>
+    <Layout :style="{padding: '0 24px 24px', height: '100%'}">
+    	<Breadcrumb :style="{margin: '24px 0'}"> 
+            <breadcrumb-item><a href="/">首页</a></breadcrumb-item> 
+            <breadcrumb-item>统计管理</breadcrumb-item> 
+            <breadcrumb-item>附件统计</breadcrumb-item> 
+        </Breadcrumb> 
+        <i-content :style="{padding: '24px', minHeight: '428px', background: '#fff'}">
+        	<i-form inline ref="formInline" method="post" action="" >
+                <form-item>
+                    	<i-button type="primary" @click="startFlush()" > 自动周期性刷新 </i-button>
+                    	<i-button type="primary" @click="endFlush()" > 停止刷新 </i-button>
+                </form-item>
+        	</i-form>
+            <div class="echart-box clearfix">
+                <div id="main" class="echart-item"></div>
+                <div id="main2" class="echart-item"></div>
+            </div>
+        </i-content>
+    </Layout>
+</div>
+<script type="text/javascript">
+var mainChart,main2Chart;
+var myVue = new Vue({
+    el: '#app_content',
+    data:{
+    	bars:{
+    		titleName:'',
+	        names:[],
+	        values:[]
+	  	},
+    	pies:{
+    		titleName:'',
+    		names:[],
+    		values:[],
+	        nameValues:[]
+	  	},
+	  	funshId:''
+    },
+    created: function () {
+    },
+    mounted:function () {
+    	 let param = new URLSearchParams(); 
+	     axios.all([
+   	    			axios.post('<%=ctxPath %>/htgl/statisticController/statisticattachment/api', param)
+   	  		]).then(axios.spread(function (statisticAttachmentResp) {
+   		  			if(statisticAttachmentResp.data.flag){
+   			  			myVue.bars.titleName = statisticAttachmentResp.data.data.titleName;
+   			  			myVue.bars.names = statisticAttachmentResp.data.data.names;
+   			  			myVue.bars.values = statisticAttachmentResp.data.data.values;
+   			  			
+   			  			myVue.pies.titleName = statisticAttachmentResp.data.data.titleName;
+   			  			myVue.pies.names = statisticAttachmentResp.data.data.names;
+			  			myVue.pies.values = statisticAttachmentResp.data.data.values;
+			  			myVue.pies.nameValues = statisticAttachmentResp.data.data.nameValues;
+   			  			
+   			  			
+   			  			myVue.$options.methods.initMainEchart();
+   			  			myVue.$options.methods.initMain2Echart();
+   		  			}
+   	  		}));
+    },
+    methods:{
+    	 search:function () {
+    		 let param = new URLSearchParams(); 
+    	     axios.all([
+       	    			axios.post('<%=ctxPath %>/htgl/statisticController/statisticattachment/api', param)
+       	  		]).then(axios.spread(function (statisticAttachmentResp) {
+       		  			if(statisticAttachmentResp.data.flag){
+       			  			myVue.bars.titleName = statisticAttachmentResp.data.data.titleName;
+       			  			myVue.bars.names = statisticAttachmentResp.data.data.names;
+       			  			myVue.bars.values = statisticAttachmentResp.data.data.values;
+       			  			
+       			  			myVue.pies.titleName = statisticAttachmentResp.data.data.titleName;
+       			  			myVue.pies.names = statisticAttachmentResp.data.data.names;
+    			  			myVue.pies.values = statisticAttachmentResp.data.data.values;
+    			  			myVue.pies.nameValues = statisticAttachmentResp.data.data.nameValues;
+       			  			
+       			  			myVue.$options.methods.initMainEchart();
+       			  			myVue.$options.methods.initMain2Echart();
+       		  			}
+       	  		}));
+    	 },
+    	 startFlush:function(){
+    		 myVue.funshId=window.setInterval(myVue.$options.methods.refreshStatistic, 3000);
+    	 },
+    	 endFlush:function(){
+    		 window.clearInterval(myVue.funshId); 
+    	 },
+    	 refreshStatistic:function() {
+    		 myVue.$options.methods.search();
+    	 },
+    	 //已有统计则销毁
+    	 disposeChart:function(){
+    		 if (mainChart != null && mainChart != "" && mainChart != undefined) {
+ 		    	mainChart.dispose();
+	    	 }
+ 		     if (main2Chart != null && main2Chart != "" && main2Chart != undefined) {
+ 		    	main2Chart.dispose();
+	    	 }
+    	 },
+    	 //init----initMain
+    	 initMainEchart:function(){
+    		    //基于准备好的dom，初始化echarts实例，如果已经初始化，则重新初始化
+    		    if (mainChart != null && mainChart != "" && mainChart != undefined) {
+    		    	mainChart.dispose();
+	    		}
+    		    mainChart = echarts.init(document.getElementById('main'));
+    	        var app = {};
+    	        var option = {
+    	        		title : {
+    	        	        text: myVue.bars.titleName,
+    	        	        x:'center'
+    	        	    },
+    	        	    legend: {
+        	            },
+        	            tooltip: {
+        	                trigger: 'axis',
+        	                axisPointer: {
+        	                    type: 'cross',
+        	                    crossStyle: {
+        	                        color: '#999'
+        	                    }
+        	                }
+        	            },
+        	            toolbox: {
+        	            	feature: {
+        	                    dataView: {show: true, readOnly: false},
+        	                    magicType: {show: true, type: ['bar','line']},
+        	                    restore: {show: true},
+        	                    saveAsImage: {show: true}
+        	                }
+        	            },
+        	            color: ['#3398DB'],
+        	            xAxis: [
+        	                {
+        	                    type: 'category',
+        	                    data: myVue.bars.names,
+        	                    axisPointer: {
+        	                        type: 'shadow'
+        	                    }
+        	                }
+        	            ],
+        	            yAxis: [
+        	                {
+        	                    type: 'value',
+        	                    name: '数量',
+        	                    min: 0,
+        	                    interval: 5,
+        	                    axisLabel: {
+        	                        formatter: '{value}'
+        	                    }
+        	                }
+        	            ],
+        	            series: [
+        	                {
+        	                    type:'bar',
+        	                    data:myVue.bars.values,
+        	                    itemStyle: {
+        	                        normal: {
+        	                        	label: {
+        	                        		show: true, //开启显示
+        	                        		position: 'top', //在上方显示
+        	                        		textStyle: { //数值样式
+        	                        		    color: 'black',
+        	                        		    fontSize: 16
+        	                        		}
+        	                            }
+        	                        }
+        	                    },
+        	                    markLine : {
+        	                        symbol : 'none',
+        	                        itemStyle : {
+        	                          normal : {
+        	                            color:'#1e90ff',
+        	                            label : {
+        	                              show:true
+        	                            }
+        	                          }
+        	                        },
+        	                        data : [{type : 'average', name: '平均值'}]
+        	                      }
+        	                }
+        	            ]
+    	        };
+    	        if (option && typeof option === "object") {
+    	        	// 使用刚指定的配置项和数据显示图表。
+    	            mainChart.setOption(option, true);
+    	        }
+    	 },
+    	 //init----initMian2
+    	 initMain2Echart:function(){
+    		   if (main2Chart != null && main2Chart != "" && main2Chart != undefined) {
+    			 	main2Chart.dispose();
+	    		}
+    	        main2Chart = echarts.init(document.getElementById('main2'));
+    	        var option2 = {
+    	        		title : {
+        	                text: myVue.pies.titleName,
+        	                subtext: '',
+        	                x:'center'
+        	            },
+        	            toolbox: {
+        	            	feature: {
+        	                    dataView: {show: true, readOnly: false},
+        	                    saveAsImage: {show: true}
+        	                }
+        	            },
+        	            tooltip : {
+        	                trigger: 'item',
+        	                formatter: "{b} : {c} 个 <br/>   {d}%"
+        	            },
+        	            legend: {
+        	                orient: 'vertical',
+        	                left: 'left',
+        	                data: myVue.pies.names
+        	            },
+        	            series : [
+        	                {
+        	                    name: '加班内容',
+        	                    type: 'pie',
+        	                    radius : '55%',//饼的半径
+        	                    center: ['50%', '60%'],//饼的中心位置
+        	                    data:myVue.pies.nameValues,
+        	                    label: {
+        	                        normal: {
+        	                            show: true,
+        	                            //position: 'inside',
+        	                            formatter: '{b}: {c} 个  {d}%'/* ,
+        	                            textStyle : {                   
+            	                            align : 'center',
+            	                            baseline : 'middle',
+            	                            fontFamily : '微软雅黑',
+            	                            fontSize : 15,
+            	                            fontWeight : 'bolder'
+            	                         } */
+        	                        }
+        	                    }
+        	                    /* itemStyle: {
+        	                        emphasis: {
+        	                            shadowBlur: 10,
+        	                            shadowOffsetX: 0,
+        	                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+        	                        }
+        	                    } */
+        	                }
+        	            ]
+    	        };
+    	        if (option2 && typeof option2 === "object") {
+    	        	main2Chart.setOption(option2, true);
+    	        }
+    	 }
+    }
+});
+
+</script>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+    	http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+        
+    <context:annotation-config />
+    
+    <!-- AOP -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	<bean class="com.zhb.vue.aspect.FlushUserInfoDataAspect" />
+	<bean class="com.zhb.vue.aspect.FlushFunctionInfoDataAspect" />
+
+<!-- 自动扫描service dao 排除controller,注册带有@Service、@repository、@Component等注解的类成为spring的bean -->
+    <context:component-scan base-package="com.zhb.vue.service,com.zhb.vue.dao">
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+    
+    <!-- 引入server.properties文件 -->
+    <bean class="com.zhb.forever.framework.config.spring.ConfigurablePropertyPlaceholder">
+        <property name="propertyLocationSystemProperty" value="propertyPath" />
+        <property name="defaultPropertyFileName" value="server.properties" />
+        <property name="ignoreResourceNotFound" value="false" />
+    </bean>
+    
+    <bean id="wall-filter-config" class="com.alibaba.druid.wall.WallConfig">
+        <property name="selectIntoAllow" value="false"></property>
+        <property name="replaceAllow" value="false"></property>
+        <property name="mergeAllow" value="false"></property>
+        <property name="callAllow" value="false"></property>
+        <property name="setAllow" value="false"></property>
+        <property name="truncateAllow" value="false"></property>
+        <property name="createTableAllow" value="false"></property>
+        <property name="alterTableAllow" value="false"></property>
+        <property name="dropTableAllow" value="false"></property>
+        <property name="deleteWhereNoneCheck" value="true"></property>
+        <property name="updateWhereNoneCheck" value="true"></property>
+        <property name="conditionAndAlwayTrueAllow" value="false"></property>
+        <property name="conditionAndAlwayFalseAllow" value="false"></property>
+        <property name="mustParameterized" value="false"></property>
+    </bean>
+    <bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">
+        <property name="logViolation" value="true"></property>
+        <property name="throwException" value="false"></property>
+        <property name="config" ref="wall-filter-config"></property>
+    </bean>
+    <bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
+        <property name="mergeSql" value="true" />
+    </bean>
+    <bean id="parentDataSource" abstract="true">
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="1" />
+        <property name="minIdle" value="1" />
+        <property name="maxActive" value="50" />
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="6000" />
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="20000" />
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="100000" />
+        <property name="validationQuery" value="SELECT 1 FROM DUAL" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="true" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+        <property name="proxyFilters">
+            <list>
+                <ref bean="wall-filter" />
+                <ref bean="stat-filter" />
+            </list>
+        </property>
+        <property name="filters" value="slf4j" />
+        <property name="connectionProperties" value="druid.stat.slowSqlMillis=100" />
+    </bean>
+    
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close" parent="parentDataSource">
+        <property name="driverClassName" value="${sys.jdbc.datasourse.vue.driverClassName}"/>
+        <property name="url" value="${sys.jdbc.datasourse.vue.url}" />
+        <property name="username" value="${sys.jdbc.datasourse.vue.username}" />
+        <property name="password" value="${sys.jdbc.datasourse.vue.password}" />
+    </bean>
+
+    <!-- session工厂 -->
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">${sys.jdbc.hibernate.hbm2ddl.auto}</prop> 
+                <prop key="hibernate.dialect">${sys.jdbc.hibernate.dialect}</prop>
+                <prop key="hibernate.dialect.storage_engine">${sys.jdbc.hibernate.dialect.storage_engine}</prop>
+                <prop key="hibernate.cache.provider_class">org.hibernate.cache.HashtableCacheProvider</prop>
+                <prop key="hibernate.show_sql">${sys.jdbc.hibernate.show_sql}</prop>
+                <prop key="hibernate.format_sql">${sys.jdbc.hibernate.format_sql}</prop>
+            </props>
+        </property>
+        <!-- 注解方式配置 -->
+        <property name="packagesToScan">
+            <list>
+                <value>com.zhb.vue.pojo</value>
+            </list>
+        </property>
+        <!--<property name="configLocation">-->
+            <!--<value>classpath:spring-hibernate-cfg.xml</value>-->
+        <!--</property>-->
+    </bean>
+
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    
+</beans>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  - Sample namespace-based configuration
+  -
+  - $Id: applicationContext-security.xml 3019 2008-05-01 17:51:48Z luke_t $
+  -->
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+       xmlns:beans="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+       
+    <beans:bean id="sysPropertyConfigurer" class="com.chsi.framework.config.spring.ConfigurablePropertyPlaceholder">
+        <beans:property name="propertyLocationSystemProperty" value="propertyPath" />
+        <beans:property name="defaultPropertyFileName" value="server.properties" />
+    </beans:bean>
+                        
+    <global-method-security secured-annotations="enabled">
+        <!-- AspectJ pointcut expression that locates our "post" method and applies security that way
+        <protect-pointcut expression="execution(* bigbank.*Service.post*(..))" access="ROLE_TELLER"/>
+        -->
+    </global-method-security>
+
+    <http entry-point-ref="casProcessingFilterEntryPoint">
+        <form-login />
+        <http-basic />
+        <anonymous />
+        <remember-me />
+        <!--登录监测页面-->
+        <intercept-url pattern="/j_spring_cas_security_check" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <!-- 公共资源-->
+        <intercept-url pattern="/css/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <intercept-url pattern="/js/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <intercept-url pattern="/images/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <intercept-url pattern="/help/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <intercept-url pattern="/error.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <!-- 超级管理员 -->
+        <intercept-url pattern="/system/**" access="ROLE_KQ_ADMIN" />
+        <intercept-url pattern="/manager/**" access="ROLE_KQ_DEPARTMENT_MANAGER,ROLE_KQ_GROUP_LEADER" />
+        <intercept-url pattern="/hr/**" access="ROLE_KQ_HR" />
+        <!-- 组织加班内容设置 -->
+        <intercept-url pattern="/jb/config/orgcontent/**" access="ROLE_KQ_JB_NRHQ" />
+        <intercept-url pattern="/jb/config/content/allworkcontent/api" access="ROLE_KQ_JB_NRHQ,ROLE_KQ_JB_PZ" />
+        <!-- 加班配置 -->
+        <intercept-url pattern="/jb/config/content/**" access="ROLE_KQ_JB_PZ" />
+        <intercept-url pattern="/jb/config/holiday/**" access="ROLE_KQ_JB_PZ" />
+        <!-- 部门内部排序 -->
+        <intercept-url pattern="/jb/config/orgorder/**" access="ROLE_KQ_DP_PX" />
+        <!-- 加班填报 -->
+        <intercept-url pattern="/jb/worktime/**" access="ROLE_KQ_JB_TB" />
+        <!-- 加班审核 -->
+        <intercept-url pattern="/jb/check/**" access="ROLE_KQ_JB_SH" />
+        <!-- 加班设置餐补 -->
+        <intercept-url pattern="/jb/mealallowance/**" access="ROLE_KQ_JB_CB" />
+        <!-- 加班管理历史 -->
+        <intercept-url pattern="/jb/history/**" access="ROLE_KQ_JB_SH,ROLE_KQ_JB_CB"/>
+        <!-- 加班导出 -->
+        <intercept-url pattern="/jb/export/**" access="ROLE_KQ_JB_DC" />
+        <!-- 授权下属 -->
+        <intercept-url pattern="/qxgl/**" access="ROLE_KQ_SQ" />
+        <intercept-url pattern="/**" access="ROLE_KQ_INNER_NORMAL" />
+        
+        <custom-filter ref="casProcessingFilter" position="CAS_FILTER" />
+        <custom-filter ref="casLogoutCallbackFilter" after="LOGOUT_FILTER "/>
+        <custom-filter ref="casLogoutFilter" position="LOGOUT_FILTER "/>
+        
+        <!-- Disable web URI authorization, as we're using <global-method-security> and have @Secured the services layer instead
+        <intercept-url pattern="/listAccounts.html" access="IS_AUTHENTICATED_REMEMBERED" />
+        <intercept-url pattern="/post.html" access="ROLE_TELLER" />
+        -->
+    </http>
+
+    <beans:bean id="userDetailsService" class="com.chsi.account.client.springsecurity.UserDetailsServiceImpl" />
+    
+    <authentication-manager alias="authenticationManager">
+        <!-- <authentication-provider ref="jwtAuthenticationProvider" /> -->
+        <authentication-provider ref="casAuthenticationProvider" />
+    </authentication-manager>
+
+    <beans:bean id="casProcessingFilter" class="org.springframework.security.cas.web.CasAuthenticationFilter">
+<!--     <beans:bean id="casProcessingFilter" class="com.chsi.account.cas.provider.JwtAuthenticationFilter"> -->
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+        <beans:property name="authenticationFailureHandler">
+            <beans:bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler" p:defaultFailureUrl="/casfailed.jsp"/>
+        </beans:property>
+<!--         <beans:property name="authenticationFailureHandler"> -->
+<!--             <beans:bean class="com.chsi.account.cas.provider.ChsiSimpleUrlAuthenticationFailureHandler" p:defaultFailureUrl="/casfailed.jsp"/> -->
+<!--         </beans:property> -->
+        <beans:property name="authenticationDetailsSource">
+            <!-- beans:bean class="org.springframework.security.cas.web.authentication.ServiceAuthenticationDetailsSource"/ -->
+            <beans:bean class=" org.springframework.security.web.authentication.WebAuthenticationDetailsSource"/>
+        </beans:property>
+<!--         <beans:property name="defaultTargetUrl" value="/"/> -->
+    </beans:bean>
+
+    <!-- cas切入点,被“entry-point-ref”所引用 -->
+    <!-- <beans:bean id="casProcessingFilterEntryPoint" class="org.springframework.security.cas.web.CasAuthenticationEntryPoint"> -->
+    <beans:bean id="casProcessingFilterEntryPoint" class="com.chsi.framework.cas.CasProcessingFilterEntryPoint">
+        <beans:property name="loginUrl" value="${sys.website.account.protocol}://${sys.website.account.servername}/passport/login"/>
+        <beans:property name="serviceProperties" ref="serviceProperties"/>
+    </beans:bean>
+    <!-- Cas configure--> 
+    <!-- serviceProperties 为认证成功后服务端返回的地址 . 该地址将作为参数传递到服务端 , 此处不能写为 IP 
+           的形式。需写为主机名 ( 证书生成时写的计算机全名 ) 或域名 -->  
+    <beans:bean id="serviceProperties" class="org.springframework.security.cas.ServiceProperties">
+        <beans:property name="service" value="${sys.website.kaoqin.protocol}://${sys.website.kaoqin.servername}/j_spring_cas_security_check"/>
+        <!-- sendRenew 为 boolean 类型 当为 true 时每新打开窗口则需重新登录 -->
+        <beans:property name="sendRenew" value="false"/>
+    </beans:bean>
+    
+    <!-- cas认证提供器，定义客户端的验证方式 -->
+    <beans:bean id="casAuthenticationProvider" class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
+        <!-- 客户端只验证用户名是否合法 --> 
+        <beans:property name="authenticationUserDetailsService" ref="casAuthenticationUserDetailsService"/>
+        <beans:property name="serviceProperties" ref="serviceProperties" />
+        <beans:property name="ticketValidator">
+            <beans:bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
+                <beans:constructor-arg index="0" value="${sys.website.account.protocol}://${sys.website.account.servername}/passport" />
+            </beans:bean>
+        </beans:property>
+        <beans:property name="key" value="cas_auth_provider_id_chsi20090209"/>
+    </beans:bean>
+    <!-- 认证用户信息 -->
+    <beans:bean id="casAuthenticationUserDetailsService" class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">  
+        <beans:property name="userDetailsService" ref="userDetailsService"/>  
+    </beans:bean>
+    
+    <!-- beans:bean id="jwtAuthenticationProvider" class="com.chsi.account.cas.provider.JwtAuthenticationProvider">
+        <beans:property name="userDetailsService" ref="userDetailsService"/>
+        <beans:property name="serviceProperties" ref="serviceProperties" />
+        <beans:property name="ticketValidator">
+            <beans:bean class="com.chsi.account.cas.provider.JwtCasServiceTicketValidator">
+                <beans:constructor-arg index="0" value="${sys.com.chsi.account.passport_protocol}://${sys.com.chsi.account.passport_server_name}/passport" />
+            </beans:bean>
+        </beans:property>
+        <beans:property name="key" value="jwt_auth_provider_id_chsi20170712"/>
+    </beans:bean -->
+
+    <!-- Cas logout -->    
+    <beans:bean id="jedisProvider" class="com.chsi.jedis.ha.client.JedisHAProvider">
+        <beans:constructor-arg index="0" value="expiredTicketCluster"/>
+    </beans:bean>
+
+    <beans:bean id="expiredTicketCache" class="com.chsi.framework.springsecurity.cas.JedisBasedExpiredTicketCache" >
+        <beans:property name="jedisProvider" ref="jedisProvider"/>
+    </beans:bean> 
+    <beans:bean id="casLogoutCallbackFilter"   class="com.chsi.framework.springsecurity.cas.filter.CasLogoutCallbackFilter">
+        <beans:property name="filterProcessesUrl" value="/j_spring_cas_security_check" />
+        <beans:property name="expiredTicketCache" ref="expiredTicketCache" />
+    </beans:bean>    
+
+    <beans:bean id="casLogoutFilter" class="com.chsi.framework.springsecurity.cas.filter.CasLogoutFilter">
+        <beans:property name="filterProcessesUrl" value="/logout/" />
+        <beans:property name="logoutSuccessUrl" value="/" />
+        <beans:property name="logoutHandlers">
+            <beans:list>
+                <beans:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler">
+                    <beans:property name="invalidateHttpSession" value="true" />
+                </beans:bean>
+            </beans:list>
+        </beans:property>
+        <beans:property name="serviceProperties" ref="serviceProperties" />
+        <beans:property name="logoutUrl" value="${sys.website.account.protocol}://${sys.website.account.servername}/passport/logout" />
+        <beans:property name="expiredTicketCache" ref="expiredTicketCache" />
+    </beans:bean> 
+    
+</beans:beans>

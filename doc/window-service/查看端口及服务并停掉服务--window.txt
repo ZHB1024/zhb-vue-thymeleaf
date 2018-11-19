@@ -1,0 +1,13 @@
+
+ 查看这个端口
+ netstat -aon|findstr "61616"
+ 
+ 最后一列是 PID
+ 
+ 查看这个进程：
+ tasklist|findstr "15308"
+ 
+ 停掉这个进程：
+ taskkill /F /PID 15308
+ 
+ sc delete <服务名>

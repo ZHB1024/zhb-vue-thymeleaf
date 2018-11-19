@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd    
+    http://www.springframework.org/schema/tx    
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/context   
+    http://www.springframework.org/schema/context/spring-context.xsd   
+    http://www.springframework.org/schema/mvc   
+    http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    
+    <context:annotation-config/>
+    
+    <!-- 自动扫描controller,注册带有@Controller注解的类成为spring的bean -->
+    <context:component-scan base-package="com.zhb.vue.web.controller">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    
+    <!-- <bean id="golbalHandlerExceptionResolver" class="com.zhb.vue.web.controller.golbal.GolbalHandlerExceptionResolver">
+    </bean> -->
+    
+    <mvc:resources location="/images/" mapping="/images/**" />
+    <mvc:resources location="/login/images/" mapping="/login/images/**" />
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"></property>
+        <property name="maxUploadSize" value="52428800"></property>
+        <property name="maxInMemorySize" value="1048576"></property>
+        <property name="resolveLazily" value="true" />
+    </bean>
+
+    <!-- 默认的注解映射的支持 -->
+    <mvc:annotation-driven/>
+    <mvc:default-servlet-handler default-servlet-name="default"/>
+    
+    <!-- 视图页面配置 -->
+    <!-- 定义tiles视图解析器 -->
+    <bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass">
+            <value>org.springframework.web.servlet.view.tiles3.TilesView</value>
+        </property>
+    </bean>
+
+    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+        <property name="definitions">
+            <list>
+                <value>/WEB-INF/tiles/tiles.xml</value>
+            </list>
+        </property>
+    </bean>
+    
+    <!-- thymeleaf -->
+    <bean id="templateResolver" class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
+        <property name="prefix" value="/" />
+        <property name="suffix" value=".html" />
+        <property name="order" value="0" />
+        <property name="templateMode" value="HTML" />
+        <property name="characterEncoding" value="UTF-8" />
+        <property name="cacheable" value="false" />
+    </bean>
+
+    <bean id="templateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver" />
+        <property name="additionalDialects">
+            <set>
+                <ref bean="thymeleafDialect-layout" />
+            </set>
+        </property>
+    </bean>
+    <bean id="thymeleafDialect-layout" class="nz.net.ultraq.thymeleaf.LayoutDialect" />
+
+    <bean id="viewResolver" class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine" />
+        <property name="characterEncoding" value="UTF-8" />
+    </bean>
+
+    <!-- 配置事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager2" proxy-target-class="false" />
+    <bean name="transactionManager2"
+          class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+</beans>

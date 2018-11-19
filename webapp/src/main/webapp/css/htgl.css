@@ -1,0 +1,98 @@
+/* 后台样式*/
+[v-cloak] {
+	display: none !important;
+}
+
+.clearfix:after {
+	display: block;
+	height: 0;
+	content: "\0020";
+	clear: both;
+}
+
+.clearfix {
+	zoom: 1;
+}
+
+.ivu-layout-header {
+	padding: 0 20px;
+}
+
+.layout-logo {
+	height: 30px;
+	float: left;
+	position: relative;
+	top: 3px;
+	left: 0;
+	color: #fff;
+	font-size: 25px;
+}
+
+.layout-nav {
+	float: right;
+}
+
+.filter-box {
+	margin-bottom: 10px;
+}
+
+.filter-box .add-btn {
+	float: right;
+}
+
+.ivu-table-cell {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+/* 各页面提取 */
+.ivu-input-number {
+	width: 100%;
+}
+
+.expand-row {
+	margin-bottom: 16px;
+}
+
+.ivu-table-cell-with-expand {
+	height: 15px;
+	line-height: 47px;
+	padding: 0;
+	text-align: center;
+}
+
+.ivu-table td.demo-table-info-column {
+	background-color: #2db7f5;
+	color: #fff;
+}
+
+/* 授权管理 */
+.add-person .ivu-form-item {
+	display: inline-block;
+}
+
+/* 喜欢程度 */
+.cbcs {
+	display: inline-block;
+	width: 30px;
+	text-align: center;
+	border-top: 1px solid #dcdee2;
+	border-bottom: 1px solid #dcdee2;
+	height: 31px;
+	line-height: 31px;
+	vertical-align: middle;
+}
+
+.left-btn {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.right-btn {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+/* 统计 */
+.echart-item{ float: left; width: 700px; height: 600px; margin-right: 50px; }
+.echart-item:last-child{ margin-right: 0; }
