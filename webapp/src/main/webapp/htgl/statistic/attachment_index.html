@@ -1,10 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="utf-8"%>
-    
-<%
-    String ctxPath = request.getContextPath();
-%>
-<div id="app_content" v-cloak>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{htgl/layout/htgl_layout}">
+      
+<div id="app_content" v-cloak layout:fragment="content">
     <Layout :style="{padding: '0 24px 24px', height: '100%'}">
     	<Breadcrumb :style="{margin: '24px 0'}"> 
             <breadcrumb-item><a href="/">首页</a></breadcrumb-item> 
@@ -25,7 +23,7 @@
         </i-content>
     </Layout>
 </div>
-<script type="text/javascript">
+<script layout:fragment="script" th:inline="javascript">
 var mainChart,main2Chart;
 var myVue = new Vue({
     el: '#app_content',
@@ -48,7 +46,7 @@ var myVue = new Vue({
     mounted:function () {
     	 let param = new URLSearchParams(); 
 	     axios.all([
-   	    			axios.post('<%=ctxPath %>/htgl/statisticController/statisticattachment/api', param)
+   	    			axios.post('/htgl/statisticController/statisticattachment/api', param)
    	  		]).then(axios.spread(function (statisticAttachmentResp) {
    		  			if(statisticAttachmentResp.data.flag){
    			  			myVue.bars.titleName = statisticAttachmentResp.data.data.titleName;
@@ -70,7 +68,7 @@ var myVue = new Vue({
     	 search:function () {
     		 let param = new URLSearchParams(); 
     	     axios.all([
-       	    			axios.post('<%=ctxPath %>/htgl/statisticController/statisticattachment/api', param)
+       	    			axios.post('/htgl/statisticController/statisticattachment/api', param)
        	  		]).then(axios.spread(function (statisticAttachmentResp) {
        		  			if(statisticAttachmentResp.data.flag){
        			  			myVue.bars.titleName = statisticAttachmentResp.data.data.titleName;
@@ -260,3 +258,4 @@ var myVue = new Vue({
 });
 
 </script>
+</html>

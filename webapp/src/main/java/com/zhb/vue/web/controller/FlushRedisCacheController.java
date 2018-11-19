@@ -33,13 +33,13 @@ public class FlushRedisCacheController {
     @Transactional
     public String toIndex(HttpServletRequest request,HttpServletResponse response) {
         if (StringUtil.isBlank(WebAppUtil.getUserId(request))) {
-            return "login.index";
+            return "login/login";
         }
         UserInfoVO vo = WebAppUtil.getLoginInfoVO(request).getUserInfoVO();
         if (null == vo || !"root".equals(vo.getUserName())) {
             return WriteJSUtil.writeJS("越权操作", response);
         }
-        return "htgl.flushredis.index";
+        return "htgl/flushredis/index";
     }
     
     //刷新

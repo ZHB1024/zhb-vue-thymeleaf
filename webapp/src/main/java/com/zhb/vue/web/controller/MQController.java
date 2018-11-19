@@ -43,7 +43,7 @@ public class MQController {
     @RequestMapping(value = "/toindex",method = RequestMethod.GET)
     @Transactional
     public String toSpider(HttpServletRequest request,HttpServletResponse response){
-        return "htgl.mq.index";
+        return "htgl/mq/index";
     }
     
     //sendMessage

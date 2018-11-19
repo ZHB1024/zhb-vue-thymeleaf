@@ -32,9 +32,9 @@ public class CaptchaImageController extends BaseController {
     @Transactional
     public String toIndex(HttpServletRequest request,HttpServletResponse response) {
         if (StringUtil.isBlank(WebAppUtil.getUserId(request))) {
-            return "login.index";
+            return "login/login";
         }
-        return "htgl.captcha.index";
+        return "htgl/captcha/index";
     }
     
      //获取验证码

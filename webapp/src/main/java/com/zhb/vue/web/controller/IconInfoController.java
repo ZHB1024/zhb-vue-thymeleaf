@@ -39,7 +39,7 @@ public class IconInfoController {
     @RequestMapping(value="/toindex",method=RequestMethod.GET)
     @Transactional
     public String toIndex(HttpServletRequest request,HttpServletResponse response) {
-        return "htgl.icon.index";
+        return "htgl/icon/index";
     }
     
     //查询icon信息
@@ -55,7 +55,7 @@ public class IconInfoController {
     @RequestMapping(value="/toadd",method=RequestMethod.GET)
     @Transactional
     public String toAdd(HttpServletRequest request,HttpServletResponse response) {
-        return "htgl.icon.add";
+        return "htgl/icon/add";
     }
     
     //新增icon信息
@@ -105,7 +105,7 @@ public class IconInfoController {
             return WriteJSUtil.writeJS("非法操作", response);
         }
         request.setAttribute("iconInfoJson", Data2JSONUtil.iconInfoData2JSONObject(data));
-        return "htgl.icon.update";
+        return "htgl/icon/update";
     }
     
     //修改icon信息

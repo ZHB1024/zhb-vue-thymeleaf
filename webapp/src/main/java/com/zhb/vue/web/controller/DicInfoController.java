@@ -55,9 +55,9 @@ public class DicInfoController {
     @Transactional
     public String toDicIndex(HttpServletRequest request,HttpServletResponse response) {
         if (StringUtil.isBlank(WebAppUtil.getUserId(request))) {
-            return "login.index";
+            return "login/login";
         }
-        return "htgl.dic.index";
+        return "htgl/dic/index";
     }
     
     //查询
@@ -95,9 +95,9 @@ public class DicInfoController {
     @Transactional
     public String toUploadDic(HttpServletRequest request,HttpServletResponse response) {
         if (StringUtil.isBlank(WebAppUtil.getUserId(request))) {
-            return "login.index";
+            return "login/login";
         }
-        return "htgl.dic.upload";
+        return "htgl/dic/upload";
     }
     
     //上传
@@ -217,7 +217,7 @@ public class DicInfoController {
             }
         }
         ajaxData.setFlag(true);
-        return "htgl.dic.index";
+        return "htgl/dic/index";
     }
     
     //获取category，排重

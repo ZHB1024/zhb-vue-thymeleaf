@@ -42,7 +42,7 @@ public class InitController {
     @RequestMapping(value = "/toindex",method = RequestMethod.GET)
     @Transactional
     public String toIndex(HttpServletRequest request,HttpServletResponse response){
-        return "htgl.init.index";
+        return "htgl/init/index";
     }
     
     //初始化附件索引

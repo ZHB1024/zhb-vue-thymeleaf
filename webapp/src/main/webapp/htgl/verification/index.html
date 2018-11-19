@@ -1,16 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" isELIgnored="false"%>
-<%
-String ctxPath = request.getContextPath();
-%>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{htgl/layout/htgl_layout}">
 
 <style>
 li {list-style-type:none;}
 </style>
 
-<div id="app_content" >
+<div id="app_content" layout:fragment="content">
     <Layout :style="{padding: '0 20px 20px'}"> 
         <Breadcrumb :style="{margin: '24px 0'}"> 
-            <breadcrumb-item><a href="<%=ctxPath%>/"><Icon type="md-home"></Icon></a></breadcrumb-item>
+            <breadcrumb-item><a href="/"><Icon type="md-home"></Icon></a></breadcrumb-item>
             <breadcrumb-item>验证码管理</breadcrumb-item> 
             <breadcrumb-item>验证码信息</breadcrumb-item> 
         </Breadcrumb> 
@@ -49,7 +48,7 @@ li {list-style-type:none;}
 </div>
 
 
-<script>
+<script layout:fragment="script" th:inline="javascript">
 var myVue = new Vue({
     el: '#app_content',
     data:{
@@ -115,8 +114,8 @@ var myVue = new Vue({
     },
     created: function () {
     	axios.all([
-    	    axios.get('<%=ctxPath %>/htgl/verificationcodeinfocontroller/getverificationcodeinfopage/api'),
-    	    axios.get('<%=ctxPath %>/htgl/verificationcodeinfocontroller/getverificationcodetype/api')
+    	    axios.get('/htgl/verificationcodeinfocontroller/getverificationcodeinfopage/api'),
+    	    axios.get('/htgl/verificationcodeinfocontroller/getverificationcodetype/api')
     	  ]).then(axios.spread(function (verificationcodeinfoResp,typeResp) {
     		  myVue.tableDatas = verificationcodeinfoResp.data.data.result;
     		  flushPage(verificationcodeinfoResp.data.data);
@@ -135,7 +134,7 @@ var myVue = new Vue({
     	  param.append("type",myVue.formParm.type); 
     	  param.append("pageSize",myVue.pageParm.pageCount); 
    	   	  param.append("currentPage",1); 
-    	  axios.post('<%=ctxPath %>/htgl/verificationcodeinfocontroller/getverificationcodeinfopage/api', param)
+    	  axios.post('/htgl/verificationcodeinfocontroller/getverificationcodeinfopage/api', param)
     		  .then(function (response) {
     			  if(response.data.flag){
     				  myVue.tableDatas = response.data.data.result;
@@ -158,7 +157,7 @@ var myVue = new Vue({
     	  param.append("type",myVue.formParm.type); 
     	  param.append("pageSize",myVue.pageParm.pageCount); 
     	  param.append("currentPage",page); 
-    	  axios.post('<%=ctxPath %>/htgl/verificationcodeinfocontroller/getverificationcodeinfopage/api', param)
+    	  axios.post('/htgl/verificationcodeinfocontroller/getverificationcodeinfopage/api', param)
     		  .then(function (response) {
     			  if(response.data.flag){
     				  myVue.tableDatas = response.data.data.result;
@@ -181,7 +180,7 @@ var myVue = new Vue({
     	  param.append("type",myVue.formParm.type); 
     	  param.append("pageSize",pageSize); 
     	  param.append("currentPage",1); 
-    	  axios.post('<%=ctxPath %>/htgl/verificationcodeinfocontroller/getverificationcodeinfopage/api', param)
+    	  axios.post('/htgl/verificationcodeinfocontroller/getverificationcodeinfopage/api', param)
     		  .then(function (response) {
     			  if(response.data.flag){
     				  myVue.tableDatas = response.data.data.result;
@@ -205,3 +204,4 @@ function flushPage(page){
 	myVue.pageParm.currentPage = page.currentPage;
 };
 </script>
+</html>

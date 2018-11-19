@@ -45,9 +45,9 @@ public class VerificationCodeInfoController {
     @Transactional
     public String toIndex(HttpServletRequest request,HttpServletResponse response) {
         if (StringUtil.isBlank(WebAppUtil.getUserId(request))) {
-            return "login.index";
+            return "login/login";
         }
-        return "htgl.verification.index";
+        return "htgl/verification/index";
     }
     
     //查询

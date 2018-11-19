@@ -1,16 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" isELIgnored="false"%>
-<%
-String ctxPath = request.getContextPath();
-%>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{htgl/layout/htgl_layout}">
 
 <style>
 li {list-style-type:none;}
 </style>
 
-<div id="app_content" >
+<div id="app_content" layout:fragment="content">
     <Layout :style="{padding: '0 20px 20px'}"> 
         <Breadcrumb :style="{margin: '24px 0'}"> 
-            <breadcrumb-item><a href="<%=ctxPath%>/"><Icon type="md-home"></Icon></a></breadcrumb-item>
+            <breadcrumb-item><a href="/"><Icon type="md-home"></Icon></a></breadcrumb-item>
             <breadcrumb-item>授权管理</breadcrumb-item> 
             <breadcrumb-item>授权信息</breadcrumb-item> 
         </Breadcrumb> 
@@ -53,7 +52,7 @@ li {list-style-type:none;}
 </div>
 
 
-<script>
+<script layout:fragment="script" th:inline="javascript">
 var myVue = new Vue({
     el: '#app_content',
     data:{
@@ -116,9 +115,9 @@ var myVue = new Vue({
     },
     created: function () {
     	axios.all([
-    	    axios.get('<%=ctxPath %>/htgl/authoritycontroller/getauthoritypage/api'),
-    	    axios.get('<%=ctxPath %>/htgl/userinfocontroller/getusers/api'),
-    	    axios.get('<%=ctxPath %>/htgl/functioninfocontroller/getchildfunctions/api')
+    	    axios.get('/htgl/authoritycontroller/getauthoritypage/api'),
+    	    axios.get('/htgl/userinfocontroller/getusers/api'),
+    	    axios.get('/htgl/functioninfocontroller/getchildfunctions/api')
     	  ]).then(axios.spread(function (authorityResp,userinfoResp,functionResp) {
     		  myVue.tableDatas = authorityResp.data.data.result;
     		  flushPage(authorityResp.data.data);
@@ -135,7 +134,7 @@ var myVue = new Vue({
    	        onOk:function(){
    	        	let param = new URLSearchParams(); 
    	      	    param.append("id",myVue.tableDatas[index].id); 
-   	       	    axios.post('<%=ctxPath %>/htgl/authoritycontroller/delauthority/api', param)
+   	       	    axios.post('/htgl/authoritycontroller/delauthority/api', param)
    	      		  .then(function (response) {
    	      			  if(response.data.flag){
    	      				  myVue.$Message.success({
@@ -166,7 +165,7 @@ var myVue = new Vue({
     	  param.append("functionId",myVue.formParm.functionId);
     	  param.append("pageSize",myVue.pageParm.pageCount); 
    	   	  param.append("currentPage",1); 
-    	  axios.post('<%=ctxPath %>/htgl/authoritycontroller/getauthoritypage/api', param)
+    	  axios.post('/htgl/authoritycontroller/getauthoritypage/api', param)
     		  .then(function (response) {
     			  if(response.data.flag){
     				  myVue.tableDatas = response.data.data.result;
@@ -188,7 +187,7 @@ var myVue = new Vue({
     	  param.append("functionId",myVue.formParm.functionId); 
     	  param.append("pageSize",myVue.pageParm.pageCount); 
     	  param.append("currentPage",page); 
-    	  axios.post('<%=ctxPath %>/htgl/authoritycontroller/getauthoritypage/api', param)
+    	  axios.post('/htgl/authoritycontroller/getauthoritypage/api', param)
     		  .then(function (response) {
     			  if(response.data.flag){
     				  myVue.tableDatas = response.data.data.result;
@@ -209,7 +208,7 @@ var myVue = new Vue({
     	  param.append("functionId",myVue.formParm.functionId); 
     	  param.append("pageSize",pageSize); 
     	  param.append("currentPage",1); 
-    	  axios.post('<%=ctxPath %>/htgl/authoritycontroller/getauthoritypage/api', param)
+    	  axios.post('/htgl/authoritycontroller/getauthoritypage/api', param)
     		  .then(function (response) {
     			  if(response.data.flag){
     				  myVue.tableDatas = response.data.data.result;
@@ -234,3 +233,4 @@ function flushPage(page){
 	myVue.pageParm.currentPage = page.currentPage;
 };
 </script>
+</html>

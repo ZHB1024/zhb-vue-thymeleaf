@@ -1,13 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" isELIgnored="false"%>
-<%
-String ctxPath = request.getContextPath();
-%>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{htgl/layout/htgl_layout}">
 
 <style>
 li {list-style-type:none;}
 </style>
 
-<div id="app_content" style="height: 100%">
+<div id="app_content" style="height: 100%" layout:fragment="content">
     <Layout :style="{padding: '0 24px 24px', height: '100%'}"> 
         <Breadcrumb :style="{margin: '24px 0'}"> 
             <breadcrumb-item><a href="">首页</a></breadcrumb-item> 
@@ -29,13 +28,13 @@ li {list-style-type:none;}
 </div>
 
 
-<script type="text/javascript">
+<script layout:fragment="script" th:inline="javascript">
 var myVue = new Vue({
     el: '#app_content',
     methods: {
         handleSubmit:function(name) {
         	let param = new URLSearchParams(); 
-     	  	axios.post('<%=ctxPath %>/htgl/jsoupspidercontroller/spideryellow', param)
+     	  	axios.post('/htgl/jsoupspidercontroller/spideryellow', param)
      		  	.then(function (response) {
      			  	if(response.data.flag){
      			  		myVue.$Message.success({
@@ -54,7 +53,7 @@ var myVue = new Vue({
         },
         handleSubmit2:function(name) {
         	let param = new URLSearchParams(); 
-     	  	axios.post('<%=ctxPath %>/htgl/jsoupspidercontroller/spideryellow2', param)
+     	  	axios.post('/htgl/jsoupspidercontroller/spideryellow2', param)
      		  	.then(function (response) {
      			  	if(response.data.flag){
      			  		myVue.$Message.success({
@@ -73,7 +72,7 @@ var myVue = new Vue({
         },
         handleSubmit3:function(name) {
         	let param = new URLSearchParams(); 
-     	  	axios.post('<%=ctxPath %>/htgl/jsoupspidercontroller/spideryx', param)
+     	  	axios.post('/htgl/jsoupspidercontroller/spideryx', param)
      		  	.then(function (response) {
      			  	if(response.data.flag){
      			  		myVue.$Message.success({
@@ -93,3 +92,4 @@ var myVue = new Vue({
     }
 });
 </script>
+</html>

@@ -44,9 +44,9 @@ public class StatisticController {
     @Transactional
     public String toIndex(HttpServletRequest request,HttpServletResponse response) {
         if (StringUtil.isBlank(WebAppUtil.getUserId(request))) {
-            return "login.index";
+            return "login/login";
         }
-        return "htgl.statistic.attachment";
+        return "htgl/statistic/attachment";
     }
     
     //统计附件
@@ -67,9 +67,9 @@ public class StatisticController {
     @Transactional
     public String toDicIndex(HttpServletRequest request,HttpServletResponse response) {
         if (StringUtil.isBlank(WebAppUtil.getUserId(request))) {
-            return "login.index";
+            return "login/login";
         }
-        return "htgl.statistic.dic";
+        return "htgl/statistic/dic";
     }
     
     //统计字典项

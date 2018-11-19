@@ -1,16 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" isELIgnored="false"%>
-<%
-String ctxPath = request.getContextPath();
-%>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{htgl/layout/htgl_layout}">
 
 <style>
 li {list-style-type:none;}
 </style>
 
-<div id="app_content" >
+<div id="app_content" layout:fragment="content">
     <Layout :style="{padding: '0 20px 20px'}"> 
         <Breadcrumb :style="{margin: '24px 0'}"> 
-            <breadcrumb-item><a href="<%=ctxPath%>/"><Icon type="md-home"></Icon></a></breadcrumb-item>
+            <breadcrumb-item><a href="/"><Icon type="md-home"></Icon></a></breadcrumb-item>
             <breadcrumb-item>图标管理</breadcrumb-item> 
             <breadcrumb-item>图标信息</breadcrumb-item> 
         </Breadcrumb> 
@@ -26,7 +25,7 @@ li {list-style-type:none;}
 </div>
 
 
-<script>
+<script layout:fragment="script" th:inline="javascript">
 var myVue = new Vue({
     el: '#app_content',
     data:{
@@ -142,14 +141,14 @@ var myVue = new Vue({
     },
     created: function () {
     	axios.all([
-    	    axios.get('<%=ctxPath %>/htgl/iconinfocontroller/geticoninfo/api')
+    	    axios.get('/htgl/iconinfocontroller/geticoninfo/api')
     	  ]).then(axios.spread(function (iconinfoResp) {
     		  myVue.tableDatas = iconinfoResp.data.data;
     	  }));
     },
     methods: {
         modify: function (index) {
-    		window.location.href='<%=ctxPath%>/htgl/iconinfocontroller/toupdate?id='+myVue.tableDatas[index].id;
+    		window.location.href='/htgl/iconinfocontroller/toupdate?id='+myVue.tableDatas[index].id;
       	},
        remove: function (index) {
     	   this.$Modal.confirm({
@@ -159,7 +158,7 @@ var myVue = new Vue({
                	let param = new URLSearchParams(); 
              	    param.append("id",myVue.tableDatas[index].id); 
              	    param.append("deleteFlag",1); 
-             	    axios.post('<%=ctxPath %>/htgl/iconinfocontroller/deloropenicon/api', param)
+             	    axios.post('/htgl/iconinfocontroller/deloropenicon/api', param)
        		         .then(function (response) {
        			  		if(response.data.flag){
        			  			myVue.$Message.success({
@@ -190,7 +189,7 @@ var myVue = new Vue({
                	let param = new URLSearchParams(); 
              	    param.append("id",myVue.tableDatas[index].id); 
              	    param.append("deleteFlag",0); 
-             	    axios.post('<%=ctxPath %>/htgl/iconinfocontroller/deloropenicon/api', param)
+             	    axios.post('/htgl/iconinfocontroller/deloropenicon/api', param)
        		         .then(function (response) {
        			  		if(response.data.flag){
        			  			myVue.$Message.success({
@@ -216,3 +215,4 @@ var myVue = new Vue({
     }
 });
 </script>
+</html>

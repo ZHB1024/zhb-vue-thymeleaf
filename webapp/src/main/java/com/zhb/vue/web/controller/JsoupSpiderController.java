@@ -57,7 +57,7 @@ public class JsoupSpiderController {
                 }
             }
         }*/
-        return "htgl.spider.index";
+        return "htgl/spider/index";
     }
 
     //http://www.mtl018.com/forum-58-1.html

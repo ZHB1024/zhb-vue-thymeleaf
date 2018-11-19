@@ -67,7 +67,7 @@ public class AuthorityController {
     @RequestMapping(value="/toindex",method=RequestMethod.GET)
     @Transactional
     public String toAuthority(HttpServletRequest request,HttpServletResponse response) {
-        return "htgl.authority.index";
+        return "htgl/authority/index";
     }
     
     //查询授权信息
@@ -96,7 +96,7 @@ public class AuthorityController {
     @RequestMapping(value="/toadd",method=RequestMethod.GET)
     @Transactional
     public String toadd(HttpServletRequest request,HttpServletResponse response) {
-        return "htgl.authority.add";
+        return "htgl/authority/add";
     }
     
     //新增授权

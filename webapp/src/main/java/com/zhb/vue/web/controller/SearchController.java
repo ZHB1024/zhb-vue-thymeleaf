@@ -56,7 +56,7 @@ public class SearchController {
     @RequestMapping(value = "/toindex",method = RequestMethod.GET)
     @Transactional
     public String toIndex(HttpServletRequest request,HttpServletResponse response){
-        return "htgl.search.index";
+        return "htgl/search/index";
     }
     
     /*solr search*/

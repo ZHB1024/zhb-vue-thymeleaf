@@ -1,13 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" isELIgnored="false"%>
-<%
-String ctxPath = request.getContextPath();
-%>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{htgl/layout/htgl_layout}">
 
 <style>
 li {list-style-type:none;}
 </style>
 
-<div id="app_content" style="height: 100%">
+<div id="app_content" style="height: 100%" layout:fragment="content">
     <Layout :style="{padding: '0 24px 24px', height: '100%'}"> 
         <Breadcrumb :style="{margin: '24px 0'}"> 
             <breadcrumb-item><a href="">首页</a></breadcrumb-item> 
@@ -58,7 +57,7 @@ li {list-style-type:none;}
 </div>
 
 
-<script type="text/javascript">
+<script layout:fragment="script" th:inline="javascript">
 var myVue =  new Vue({
 	  el: '#app_content',
 	  data:{
@@ -82,8 +81,8 @@ var myVue =  new Vue({
 	  },
 	  created: function () {
 		  axios.all([
-	    	    axios.get('<%=ctxPath %>/htgl/userinfocontroller/getalluserinfo/api'),
-	    	    axios.get('<%=ctxPath %>/htgl/functioninfocontroller/getchildfunctions/api')
+	    	    axios.get('/htgl/userinfocontroller/getalluserinfo/api'),
+	    	    axios.get('/htgl/functioninfocontroller/getchildfunctions/api')
 	    	  ]).then(axios.spread(function (userResp,functionResp) {
 	    		  myVue.userParm = userResp.data.data;
 	    		  myVue.functionParm = functionResp.data.data;
@@ -97,7 +96,7 @@ var myVue =  new Vue({
 		          	  	param.append("userId",myVue.authority.userId); 
 		          	  	param.append("functionId",myVue.authority.functionId); 
 		          	  	param.append("opt",myVue.authority.opt); 
-		          	  	axios.post('<%=ctxPath%>/htgl/authoritycontroller/addauthority/api', param)
+		          	  	axios.post('/htgl/authoritycontroller/addauthority/api', param)
 		          		  	 .then(function (response) {
 		          			  	 if(response.data.flag){
 		          			  		myVue.$Message.success({
@@ -105,7 +104,7 @@ var myVue =  new Vue({
 		                                duration: 3,
 		                                closable: true
 		                            });
-		          			  	    window.location.href='<%=ctxPath%>/htgl/authoritycontroller/toindex';
+		          			  	    window.location.href='/htgl/authoritycontroller/toindex';
 		                        }else{
 		                      	  myVue.$Message.warning({
 		                                content: response.data.errorMessages,
@@ -124,3 +123,4 @@ var myVue =  new Vue({
 	  }
 });
 </script>
+</html>

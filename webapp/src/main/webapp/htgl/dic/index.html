@@ -1,16 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" isELIgnored="false"%>
-<%
-String ctxPath = request.getContextPath();
-%>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{htgl/layout/htgl_layout}">
 
 <style>
 li {list-style-type:none;}
 </style>
 
-<div id="app_content" >
+<div id="app_content" layout:fragment="content">
     <Layout :style="{padding: '0 20px 20px'}"> 
         <Breadcrumb :style="{margin: '24px 0'}"> 
-            <breadcrumb-item><a href="<%=ctxPath%>/"><Icon type="md-home"></Icon></a></breadcrumb-item>
+            <breadcrumb-item><a href="/"><Icon type="md-home"></Icon></a></breadcrumb-item>
             <breadcrumb-item>字典管理</breadcrumb-item> 
             <breadcrumb-item>字典信息</breadcrumb-item> 
         </Breadcrumb> 
@@ -57,7 +56,7 @@ li {list-style-type:none;}
 </div>
 
 
-<script>
+<script layout:fragment="script" th:inline="javascript">
 var myVue = new Vue({
     el: '#app_content',
     data:{
@@ -167,8 +166,8 @@ var myVue = new Vue({
     },
     created: function () {
     	axios.all([
-    	    axios.get('<%=ctxPath %>/htgl/dicinfocontroller/getdicinfopage/api'),
-    	    axios.get('<%=ctxPath %>/htgl/dicinfocontroller/getdiccategory/api')
+    	    axios.get('/htgl/dicinfocontroller/getdicinfopage/api'),
+    	    axios.get('/htgl/dicinfocontroller/getdiccategory/api')
     	  ]).then(axios.spread(function (dicinfoResp,diccategoryResp) {
     		  myVue.tableDatas = dicinfoResp.data.data.result;
     		  flushPage(dicinfoResp.data.data);
@@ -178,14 +177,14 @@ var myVue = new Vue({
     methods: {
     	
         modify: function (index) {
-    		window.location.href='<%=ctxPath%>/jb/worktime/touprecord?workRecordId='+myVue.tableDatas[index].id;
+    		window.location.href='/jb/worktime/touprecord?workRecordId='+myVue.tableDatas[index].id;
       	},
        remove: function (index) {
         this.$Modal.confirm({
             title: '提示',
             content: '您确定要删除么？',
             onOk:function(){
-            	window.location.href='<%=ctxPath%>/jb/worktime/delrecord?workRecordId='+myVue.tableDatas[index].id;
+            	window.location.href='/jb/worktime/delrecord?workRecordId='+myVue.tableDatas[index].id;
             },
             onCancel:function(){
             }
@@ -200,7 +199,7 @@ var myVue = new Vue({
     	  param.append("type",myVue.formParm.type);
     	  param.append("pageSize",myVue.pageParm.pageCount); 
    	   	  param.append("currentPage",1); 
-    	  axios.post('<%=ctxPath %>/htgl/dicinfocontroller/getdicinfopage/api', param)
+    	  axios.post('/htgl/dicinfocontroller/getdicinfopage/api', param)
     		  .then(function (response) {
     			  if(response.data.flag){
     				  myVue.tableDatas = response.data.data.result;
@@ -223,7 +222,7 @@ var myVue = new Vue({
     	  param.append("type",myVue.formParm.type); 
     	  param.append("pageSize",myVue.pageParm.pageCount); 
     	  param.append("currentPage",page); 
-    	  axios.post('<%=ctxPath %>/htgl/dicinfocontroller/getdicinfopage/api', param)
+    	  axios.post('/htgl/dicinfocontroller/getdicinfopage/api', param)
     		  .then(function (response) {
     			  if(response.data.flag){
     				  myVue.tableDatas = response.data.data.result;
@@ -246,7 +245,7 @@ var myVue = new Vue({
     	  param.append("type",myVue.formParm.type); 
     	  param.append("pageSize",pageSize); 
     	  param.append("currentPage",1); 
-    	  axios.post('<%=ctxPath %>/htgl/dicinfocontroller/getdicinfopage/api', param)
+    	  axios.post('/htgl/dicinfocontroller/getdicinfopage/api', param)
     		  .then(function (response) {
     			  if(response.data.flag){
     				  myVue.tableDatas = response.data.data.result;
@@ -264,7 +263,7 @@ var myVue = new Vue({
       getDicType:function(category){
     	    let param = new URLSearchParams(); 
      	  	param.append("category",category); 
-     	  	axios.post('<%=ctxPath %>/htgl/dicinfocontroller/getdictype/api', param)
+     	  	axios.post('/htgl/dicinfocontroller/getdictype/api', param)
      		  	.then(function (response) {
      			  	if(response.data.flag){
      			  		myVue.typeParm=response.data.data;
@@ -289,3 +288,4 @@ function flushPage(page){
 	myVue.pageParm.currentPage = page.currentPage;
 };
 </script>
+</html>

@@ -40,9 +40,9 @@ public class NoSqlController {
     @Transactional
     public String toIndex(HttpServletRequest request,HttpServletResponse response) {
         if (StringUtil.isBlank(WebAppUtil.getUserId(request))) {
-            return "login.index";
+            return "login/login";
         }
-        return "htgl.nosql.index";
+        return "htgl/nosql/index";
     }
     
     //查询
