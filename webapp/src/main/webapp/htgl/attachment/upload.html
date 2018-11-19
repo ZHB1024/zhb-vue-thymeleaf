@@ -1,13 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" isELIgnored="false"%>
-<%
-String ctxPath = request.getContextPath();
-%>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{htgl/layout/htgl_layout}">%>
 
 <style>
 li {list-style-type:none;}
 </style>
 
-<div id="app_content" style="height: 100%">
+<div id="app_content" layout:fragment="content" style="height: 100%">
     <Layout :style="{padding: '0 24px 24px', height: '100%'}"> 
         <Breadcrumb :style="{margin: '24px 0'}"> 
             <breadcrumb-item><a href="">首页</a></breadcrumb-item> 
@@ -28,7 +27,7 @@ li {list-style-type:none;}
             		:on-format-error="handleFormatError"
             		:on-exceeded-size="handleSizeError"
             		:on-success="uploadResponse"
-            		action="<%=ctxPath%>/htgl/attachmentinfocontroller/uploadattachmentinfo">
+            		action="/htgl/attachmentinfocontroller/uploadattachmentinfo">
             		
         			<div style="padding: 20px 0">
             			<Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
@@ -52,7 +51,7 @@ li {list-style-type:none;}
 </div>
 
 
-<script type="text/javascript">
+<script layout:fragment="script" th:inline="javascript">
 var myVue =  new Vue({
 	  el: '#app_content',
 	  data:{
@@ -138,3 +137,4 @@ var myVue =  new Vue({
 	  }
 });
 </script>
+</html>

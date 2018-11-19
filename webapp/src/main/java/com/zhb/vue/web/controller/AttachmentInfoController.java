@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -82,9 +83,9 @@ public class AttachmentInfoController {
     @Transactional
     public String toIndex(HttpServletRequest request,HttpServletResponse response) {
         if (StringUtil.isBlank(WebAppUtil.getUserId(request))) {
-            return "login.index";
+            return "login/login";
         }
-        return "htgl.attachment.index";
+        return "htgl/attachment/index";
     }
     
    //toswiper 浏览图片
@@ -92,9 +93,9 @@ public class AttachmentInfoController {
     @Transactional
     public String toSwiper(HttpServletRequest request,HttpServletResponse response) {
         if (StringUtil.isBlank(WebAppUtil.getUserId(request))) {
-            return "login.index";
+            return "login/login";
         }
-        return "htgl.attachment.swiper";
+        return "htgl/attachment/swiper";
     }
     
     
@@ -259,9 +260,9 @@ public class AttachmentInfoController {
     @Transactional
     public String toUpload(HttpServletRequest request,HttpServletResponse response) {
         if (StringUtil.isBlank(WebAppUtil.getUserId(request))) {
-            return "login.index";
+            return "login/login";
         }
-        return "htgl.attachment.upload";
+        return "htgl/attachment/upload";
     }
     
     //上传
@@ -687,6 +688,12 @@ public class AttachmentInfoController {
         ajaxData.setFlag(true);
         ajaxData.setData(vos);
         return ajaxData;
+    }
+    
+    //附件类型
+    @ModelAttribute("attachmentTypeList")
+    public List<KeyValueVO> algorithmTypeList() {
+        return AttachmentTypeEnum.getAll();
     }
     
     //读取附件内容

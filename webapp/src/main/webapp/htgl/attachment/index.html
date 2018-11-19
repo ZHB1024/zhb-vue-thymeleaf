@@ -1,16 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" isELIgnored="false"%>
-<%
-String ctxPath = request.getContextPath();
-%>
-
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{htgl/layout/htgl_layout}">
+      
 <style>
 li {list-style-type:none;}
 </style>
 
-<div id="app_content" >
+<div id="app_content" layout:fragment="content">
     <Layout :style="{padding: '0 20px 20px'}"> 
         <Breadcrumb :style="{margin: '24px 0'}"> 
-            <breadcrumb-item><a href="<%=ctxPath%>/"><Icon type="md-home"></Icon></a></breadcrumb-item>
+            <breadcrumb-item><a href="/"><Icon type="md-home"></Icon></a></breadcrumb-item>
             <breadcrumb-item>附件管理</breadcrumb-item> 
             <breadcrumb-item>附件信息</breadcrumb-item> 
         </Breadcrumb> 
@@ -49,11 +48,11 @@ li {list-style-type:none;}
 </div>
 
 
-<script>
+<script layout:fragment="script" th:inline="javascript">
 var myVue = new Vue({
     el: '#app_content',
     data:{
-    	typeParm:[] ,
+    	typeParm:[[${attachmentTypeList}]],
     	formParm:{
     		fileName:'',
 	        type:''
@@ -217,12 +216,12 @@ var myVue = new Vue({
     },
     created: function () {
     	axios.all([
-    	    axios.get('<%=ctxPath %>/htgl/attachmentinfocontroller/getattachmentinfopage/api'),
-    	    axios.get('<%=ctxPath %>/htgl/attachmentinfocontroller/getattachmenttype/api')
+    	    axios.get('/htgl/attachmentinfocontroller/getattachmentinfopage/api'),
+    	    axios.get('/htgl/attachmentinfocontroller/getattachmenttype/api')
     	  ]).then(axios.spread(function (attachmentinfoResp,typeResp) {
     		  myVue.tableDatas = attachmentinfoResp.data.data.result;
     		  flushPage(attachmentinfoResp.data.data);
-    		  myVue.typeParm = typeResp.data.data;
+    		  //myVue.typeParm = typeResp.data.data;
     	  }));
     },
     methods: {
@@ -235,7 +234,7 @@ var myVue = new Vue({
              	    param.append("id",myVue.tableDatas[index].id); 
              	    param.append("pageSize",myVue.pageParm.pageCount); 
           	        param.append("currentPage",myVue.pageParm.currentPage);
-             	    axios.post('<%=ctxPath %>/htgl/attachmentinfocontroller/deleteattachmentinfo/api', param)
+             	    axios.post('/htgl/attachmentinfocontroller/deleteattachmentinfo/api', param)
        		         .then(function (response) {
        			  		if(response.data.flag){
        			  			myVue.$Message.success({
@@ -269,7 +268,7 @@ var myVue = new Vue({
     	  param.append("type",myVue.formParm.type);
     	  param.append("pageSize",myVue.pageParm.pageCount); 
    	   	  param.append("currentPage",1); 
-    	  axios.post('<%=ctxPath %>/htgl/attachmentinfocontroller/getattachmentinfopage/api', param)
+    	  axios.post('/htgl/attachmentinfocontroller/getattachmentinfopage/api', param)
     		  .then(function (response) {
     			  if(response.data.flag){
     				  myVue.tableDatas = response.data.data.result;
@@ -291,7 +290,7 @@ var myVue = new Vue({
     	  param.append("type",myVue.formParm.type); 
     	  param.append("pageSize",myVue.pageParm.pageCount); 
     	  param.append("currentPage",page); 
-    	  axios.post('<%=ctxPath %>/htgl/attachmentinfocontroller/getattachmentinfopage/api', param)
+    	  axios.post('/htgl/attachmentinfocontroller/getattachmentinfopage/api', param)
     		  .then(function (response) {
     			  if(response.data.flag){
     				  myVue.tableDatas = response.data.data.result;
@@ -313,7 +312,7 @@ var myVue = new Vue({
     	  param.append("type",myVue.formParm.type); 
     	  param.append("pageSize",pageSize); 
     	  param.append("currentPage",1); 
-    	  axios.post('<%=ctxPath %>/htgl/attachmentinfocontroller/getattachmentinfopage/api', param)
+    	  axios.post('/htgl/attachmentinfocontroller/getattachmentinfopage/api', param)
     		  .then(function (response) {
     			  if(response.data.flag){
     				  myVue.tableDatas = response.data.data.result;
@@ -334,7 +333,7 @@ var myVue = new Vue({
     	  if(data.row.type!=1 && data.row.type!=9){
     		  let param = new URLSearchParams(); 
     		  param.append("id",data.row.id); 
-        	  axios.post('<%=ctxPath %>/htgl/attachmentinfocontroller/readfile/api', param)
+        	  axios.post('/htgl/attachmentinfocontroller/readfile/api', param)
         		  .then(function (response) {
         			  if(response.data.flag){
         				  var showContent = response.data.data;
@@ -407,7 +406,7 @@ var myVue = new Vue({
       },
       //下载附件
       downAttachment:function(data){
-    	  window.location.href='<%=ctxPath%>/htgl/attachmentinfocontroller/downloadattachmentinfo?id=' + data.row.id;
+    	  window.location.href='/htgl/attachmentinfocontroller/downloadattachmentinfo?id=' + data.row.id;
       },
       //修改喜爱程度
       upLikeDegree: function(index,value) {
@@ -424,7 +423,7 @@ var myVue = new Vue({
           let param = new URLSearchParams(); 
           param.append("id",this.tableDatas[index].id); 
           param.append("likeDegree",likeDegreeNew); 
-          axios.post('<%=ctxPath %>/htgl/attachmentinfocontroller/updateattachmentinfo/api', param)
+          axios.post('/htgl/attachmentinfocontroller/updateattachmentinfo/api', param)
           .then(function (response) {
             if(response.data.flag){
             	myVue.$Message.success({
@@ -458,3 +457,4 @@ function generatorValue(name,value){
     return '<tr><th>' + name + '：</th><td>' + value + '</td></tr>'; 
 }
 </script>
+</html>
