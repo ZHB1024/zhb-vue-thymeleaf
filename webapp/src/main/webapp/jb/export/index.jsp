@@ -1,14 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" isELIgnored="false"%>
+<%@ page import="com.chsi.kaoqin.web.util.RemoteCallUtil"%>
 <%
     String ctxPath = request.getContextPath();
 %>
 <div id="app_content" v-cloak style="height: 100%">
     <Layout :style="{padding: '0 24px 24px', height: '100%'}"> 
         <Breadcrumb :style="{margin: '24px 0'}"> 
+            <breadcrumb-item><a href="/">首页</a></breadcrumb-item> 
             <breadcrumb-item>加班管理</breadcrumb-item> 
+            <breadcrumb-item><a href="<%=ctxPath%>/jb/export/index">记录导出</a></breadcrumb-item> 
         </Breadcrumb> 
         <i-content :style="{padding: '24px', minHeight: '428px', background: '#fff'}">
-        	<i-form inline action="<%=ctxPath %>/jb/export/exportorgworkday/api" method="post" :rules="ruleValidate" ref="formValidate" :model="formParm" >
+        	<i-form inline action="<%=ctxPath %>/jb/export/exportorgworkday/api" method="post" ref="formValidate" :model="formParm" >
                 
         		<form-item prop="organizationId">
         			<i-select name="organizationId" v-model="formParm.organizationId" style="width: 150px;" placeholder="请选择部门">
@@ -32,7 +35,7 @@
                 
         	</i-form>
         
-        	<i-table border :columns="columns1" :data="tableDatas" :no-data-text="message" class="expand-table"></i-table> 
+        	<i-table border :columns="columns1" :data="tableDatas" class="expand-table"></i-table> 
         </i-content> 
     </Layout>
 </div>
@@ -48,6 +51,8 @@
 </div>
 </script>
 <script>
+var workDaysJson = <%=request.getAttribute("workDaysJson") %> ;
+var workdateJson = <%=request.getAttribute("workdateJson") %> ;
 Vue.component('newRow', {
 	  props: ['row'],
 	  template: '#detail'
@@ -55,10 +60,9 @@ Vue.component('newRow', {
 var myVue = new Vue({
     el: '#app_content',
     data:{
-    	message:'请先选择查询条件，再进行查询',
-    	tableDatas:[],
+    	tableDatas:workDaysJson,
     	formParm:{
-    		workdate:'',
+    		workdate:workdateJson,
 	        organizationId:''
 	  	},
 	  	empParm:[] ,
@@ -78,7 +82,8 @@ var myVue = new Vue({
              {
                 title: '序号',
                 type:"index",
-                width: 70
+                align: "center",
+                width: 60
             },
             {
                 title: '姓名',
@@ -88,44 +93,29 @@ var myVue = new Vue({
             {
                 title: '部门',
                 key: 'orgName',
+                align: "center",
                 minWidth: 100
             },
             {
                 title: '加班时长（小时）',
                 key: 'hours',
                 minWidth: 100
-            }/* ,
-            {
-                title: '加班明细',
-                key: 'recordDetail'
-            } */,
+            },
             {
                 title: '餐补次数',
                 key: 'sysmeans',
                 minWidth: 100
-            },
-            {
-                title: '审核状态',
-                key: 'statusName',
-                minWidth: 100
             }
-        ],
-        ruleValidate: {
-  			 /* workdate: [
-  		    { required: true,type:'date', message: '请选择日期段', trigger: 'change' }
-  		  	]  ,
-  			organizationId: [
-  		    { required: true, message: '请选择部门', trigger: 'change' }
-  		  	] */
-    	} 
+        ]
     },
     created: function () {
     	axios.all([
-    	    <%-- axios.get('<%=ctxPath %>/jb/export/getorgworkday/api'), --%>
     	    axios.get('<%=ctxPath %>/jb/export/searchorganizations/api')
     	  ]).then(axios.spread(function (orgResp) {
-    		  /* myVue.tableDatas = workRecordResp.data.data; */
     		  myVue.orgsParm = orgResp.data.data;
+    		  if(orgResp.data.data.length > 0){
+    			  myVue.formParm.organizationId = orgResp.data.data[0].id;
+    		  }
     	  }));
     },
     methods: {
@@ -160,7 +150,6 @@ var myVue = new Vue({
         				  return ;
     				  }
     				  myVue.tableDatas=response.data.data;
-    				  myVue.message = "暂无数据";
                   }else{
                 	  myVue.$Message.warning({
                           content: response.data.errorMessages,
@@ -191,14 +180,13 @@ var myVue = new Vue({
     	  let param = new URLSearchParams(); 
     	  param.append("organizationId",myVue.formParm.organizationId); 
     	  param.append("workdate",myVue.formParm.workdate); 
-    	  console.log(myVue.formParm.status);
     	  axios.post('<%=ctxPath %>/jb/export/isreportdata/api', param)
     		  .then(function (response) {
     			  if(response.data.flag){
     				  if(response.data.data){//有未上报的数据
     					  myVue.$Modal.confirm({
                               title: '提示',
-                              content: '此日期段内还有未上报的加班记录，您确定还要继续导出么？',
+                              content: '此日期段内还有未上报的加班记录，您确定还要继续导出？',
                               closable: true,
                               okText: '继续导出',
                               cancelText: '去上报',

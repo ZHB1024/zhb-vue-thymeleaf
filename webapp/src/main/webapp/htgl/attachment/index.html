@@ -17,6 +17,11 @@ li {list-style-type:none;}
         <i-content :style="{padding: '24px', background: '#fff'}">
           <i-form inline method="post" action="" ref="formValidate">
         	
+        		<form-item prop="createDate">
+                  		<Date-picker  type="daterange"  name="createDate"  v-model="formParm.createDate"  :start-date="startDate" format="yyyy-MM-dd"  placeholder="创建日期" style="width: 200px">
+                    	</Date-picker>  
+                </form-item >
+                
                 <form-item prop="fileName">
                   		<i-input type="text" clearable name="fileName" v-model="formParm.fileName" :maxlength="15" placeholder="请输入附件名称"></i-input>
                 </form-item >
@@ -55,8 +60,10 @@ var myVue = new Vue({
     	typeParm:[[${attachmentTypeList}]],
     	formParm:{
     		fileName:'',
-	        type:''
+	        type:'',
+	        createDate:''
 	  	},
+	  	startDate:getPreDate(),
 	  	pageParm:{
 	  		currentPage:1,
 	        pageCount:20,
@@ -264,6 +271,7 @@ var myVue = new Vue({
     	  if(undefined == myVue.formParm.type){
     		  myVue.formParm.type = "";
     	  }
+    	  param.append("createDate",myVue.formParm.createDate);
     	  param.append("fileName",myVue.formParm.fileName); 
     	  param.append("type",myVue.formParm.type);
     	  param.append("pageSize",myVue.pageParm.pageCount); 

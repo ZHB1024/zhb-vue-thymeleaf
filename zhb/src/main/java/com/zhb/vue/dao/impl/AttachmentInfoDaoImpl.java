@@ -47,6 +47,14 @@ public class AttachmentInfoDaoImpl extends CommonDao implements AttachmentInfoDa
         if (StringUtil.isNotBlank(param.getFileName())) {
             conditions.add(criteriaBuilder.like(root.get("fileName"), "%" + param.getFileName() + "%"));
         }
+        
+        if(null != param.getStartDate()){
+            conditions.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createTime"), param.getStartDate()));
+        }
+        if(null != param.getEndDate()){
+            conditions.add(criteriaBuilder.lessThanOrEqualTo(root.get("createTime"), param.getEndDate()));
+        }
+        
         if (StringUtil.isNotBlank(param.getFilePath())) {
             conditions.add(criteriaBuilder.equal(root.get("filePath"), param.getFilePath()));
         }
@@ -135,6 +143,14 @@ public class AttachmentInfoDaoImpl extends CommonDao implements AttachmentInfoDa
         if (StringUtil.isNotBlank(param.getFileName())) {
             conditions.add(criteriaBuilder.like(root.get("fileName"), "%" + param.getFileName() + "%"));
         }
+        
+        if(null != param.getStartDate()){
+            conditions.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createTime"), param.getStartDate()));
+        }
+        if(null != param.getEndDate()){
+            conditions.add(criteriaBuilder.lessThanOrEqualTo(root.get("createTime"), param.getEndDate()));
+        }
+        
         if (StringUtil.isNotBlank(param.getFilePath())) {
             conditions.add(criteriaBuilder.equal(root.get("filePath"), param.getFilePath()));
         }
@@ -176,6 +192,14 @@ public class AttachmentInfoDaoImpl extends CommonDao implements AttachmentInfoDa
         if (StringUtil.isNotBlank(param.getFileName())) {
             conditions.add(criteriaBuilder.like(root.get("fileName"), "%" + param.getFileName() + "%"));
         }
+        
+        if(null != param.getStartDate()){
+            conditions.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createTime"), param.getStartDate()));
+        }
+        if(null != param.getEndDate()){
+            conditions.add(criteriaBuilder.lessThanOrEqualTo(root.get("createTime"), param.getEndDate()));
+        }
+        
         if (StringUtil.isNotBlank(param.getFilePath())) {
             conditions.add(criteriaBuilder.equal(root.get("filePath"), param.getFilePath()));
         }

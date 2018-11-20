@@ -1,6 +1,7 @@
 package com.zhb.vue.params;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class AttachmentInfoParam {
 
@@ -14,6 +15,9 @@ public class AttachmentInfoParam {
     private Calendar createTime;
     private Integer likeDegree;
     private String createUserId;
+    private String createDate;
+    private Calendar startDate;
+    private Calendar endDate;
     
     private Integer start;
     private Integer pageSize;
@@ -96,6 +100,24 @@ public class AttachmentInfoParam {
     }
     public void setCreateUserId(String createUserId) {
         this.createUserId = createUserId;
+    }
+    public String getCreateDate() {
+        return createDate;
+    }
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+    public Calendar getStartDate() {
+        return startDate;
+    }
+    public void setStartDate(Calendar startDate) {
+        this.startDate = startDate;
+    }
+    public Calendar getEndDate() {
+        return endDate;
+    }
+    public void setEndDate(Calendar endDate) {
+        this.endDate = endDate;
     }
     
 }

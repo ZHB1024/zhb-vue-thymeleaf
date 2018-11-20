@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" isELIgnored="false"%>
+<%@ page import="com.chsi.kaoqin.web.util.RemoteCallUtil"%>
 <%
 String ctxPath = request.getContextPath();
 %>
@@ -10,7 +11,9 @@ li {list-style-type:none;}
 <div id="app_content" style="height: 100%">
     <Layout :style="{padding: '0 24px 24px', height: '100%'}"> 
         <Breadcrumb :style="{margin: '24px 0'}"> 
-            <breadcrumb-item>加班记录</breadcrumb-item> 
+            <breadcrumb-item><a href="/">首页</a></breadcrumb-item> 
+            <breadcrumb-item>记录管理</breadcrumb-item> 
+            <breadcrumb-item><a href="<%=ctxPath%>/jb/worktime/toaddrecord">添加记录</a></breadcrumb-item> 
         </Breadcrumb> 
         
         <i-content :style="{padding: '24px', minHeight: '428px', background: '#fff'}">
@@ -88,6 +91,8 @@ li {list-style-type:none;}
 
 
 <script type="text/javascript">
+var startTimeJson = '<%=request.getAttribute("startTime") %>' ;
+var endTimeJson = '<%=request.getAttribute("endTime") %>' ;
 var myVue =  new Vue({
 	  el: '#app_content',
 	  data:{
@@ -101,8 +106,8 @@ var myVue =  new Vue({
 		  index: 0,
 		  items: [
         	{
-          		start: '',
-          		end: '',
+          		start: startTimeJson,
+          		end: endTimeJson,
           		index: 0,
           		status: 1
         	}
@@ -134,6 +139,7 @@ var myVue =  new Vue({
 		   handleSubmit:function (name) {
 	            this.$refs[name].validate((valid) => {
 	                if (valid) {
+	       			   myVue.$Spin.show();
 	                	var flag = true;
 	                   if(!$("input[name='startTime']").val()){
 	                	    flag = false;
@@ -145,6 +151,7 @@ var myVue =  new Vue({
 	                	$("input[name='startTime']").each(function(j,item){
 	                		if(!item.value){
 	                			flag = false;
+	                			myVue.$Spin.hide();
 		                		return false;
 	                		}
 	                		startTimes[j] = item.value;
@@ -153,12 +160,14 @@ var myVue =  new Vue({
 	                	$("input[name='endTime']").each(function(j,item){
 	                		if(!item.value){
 	                			flag = false;
+	                			myVue.$Spin.hide();
 		                		return false;
 	                		}
 	                		endTimes[j] = item.value;
 	                	  });
 	                	
 	                	if(!flag){
+	                		myVue.$Spin.hide();
 	                		myVue.$Message.warning({
                                 content: "请输入加班时间段",
                                 duration: 3,
@@ -176,6 +185,7 @@ var myVue =  new Vue({
 	              	  	param.append("endTimes",endTimes); 
 	              	  	axios.post('<%=ctxPath %>/jb/worktime/addrecord/api', param)
 	              		  	.then(function (response) {
+	              		  	  myVue.$Spin.hide();
 	              			  if(response.data.flag){
 	              					window.location.href='<%=ctxPath%>/jb/worktime/indexreport';
 	                            }else{
@@ -191,17 +201,27 @@ var myVue =  new Vue({
 	      },
 		 //添加加班时间
 		 handleAdd:function () {
-          this.index++;
-          this.items.push({
-        	    start: '',
-        	    end: '',
-                index: this.index,
-                status: 1
-          });
+			 this.index++;
+	          if(0 == this.index){
+	        	  this.items.push({
+	        		  start: startTimeJson,
+		          	  end: endTimeJson,
+		              index: this.index,
+		              status: 1
+	             });
+           }else{
+        	  this.items.push({
+          	  	  start: this.items[this.index-1].end,
+          		  end: this.items[this.index-1].end,
+                  index: this.index,
+                  status: 1
+            });
+          }
         },
         //删除加班时间
         handleRemove:function (index) {
-          this.items.splice(index,1);
+        	this.items.splice(index,1);
+        	this.index--;
         }
 	  },
 	  created: function () {

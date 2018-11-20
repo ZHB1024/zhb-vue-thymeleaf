@@ -7,7 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +39,7 @@ import com.zhb.forever.framework.dic.LikeDgreeEnum;
 import com.zhb.forever.framework.page.Page;
 import com.zhb.forever.framework.page.PageUtil;
 import com.zhb.forever.framework.util.AjaxData;
+import com.zhb.forever.framework.util.DateTimeUtil;
 import com.zhb.forever.framework.util.DetectFaceUtil;
 import com.zhb.forever.framework.util.DownloadUtil;
 import com.zhb.forever.framework.util.EncodeUtil;
@@ -793,6 +796,23 @@ public class AttachmentInfoController {
         }
         param.setId(null);
         param.setLikeDegree(null);
+        
+        if (StringUtil.isNotBlank(param.getCreateDate()) && !param.getCreateDate().equals(",")) {
+            String[] dates = param.getCreateDate().split(",");
+            try {
+                Calendar startTime = DateTimeUtil.formatGMT(dates[0], "yyyy-MM-dd");
+                Calendar endTime = DateTimeUtil.formatGMT(dates[1], "yyyy-MM-dd");
+                param.setStartDate(startTime);
+                param.setEndDate(endTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                ajaxData.setFlag(false);
+                ajaxData.addMessage("转换日期异常");
+                return ajaxData;
+            }
+            
+        }
+        
         //排序字段
         List<OrderVO> orderVos = new ArrayList<>();
         OrderVO vo1 = new OrderVO("likeDegree",false);
