@@ -30,7 +30,7 @@
     
     <!-- 定时任务 -->
 	<listener>
-		<listener-class>com.zhb.vue.web.timertask.listener.DeleteVerificationCodeListener</listener-class>
+		<listener-class>com.zhb.vue.web.timer.listener.DeleteVerificationCodeListener</listener-class>
 	</listener>
     
     <filter>

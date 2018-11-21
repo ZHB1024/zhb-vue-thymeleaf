@@ -1,4 +1,4 @@
-package com.zhb.vue.web.timertask.listener;
+package com.zhb.vue.web.timer.listener;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import com.zhb.vue.web.timertask.task.DeleteVerificationCodeTask;
+import com.zhb.vue.web.timer.task.DeleteVerificationCodeTask;
 
 public class DeleteVerificationCodeListener implements ServletContextListener {
 
