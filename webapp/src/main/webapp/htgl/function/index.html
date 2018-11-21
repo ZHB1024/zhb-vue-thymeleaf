@@ -20,44 +20,11 @@
     </Layout>
 </div>
 
-<script type="x-template" id="expand-detail" layout:fragment="script" th:inline="javascript">
-<div>
-  <Row v-for="record in row.children" class="expand-row">
-    <i-col span="8">
-      <span class="expand-key">功能名称: </span>
-      <span class="expand-value">{{ record.name }}</span>
-    </i-col>
-    <i-col span="8">
-      <span class="expand-key">访问路径: </span>
-      <span class="expand-value">{{ record.path }}</span>
-    </i-col>
-    <i-col span="3">
-      <span class="expand-key">图标： </span>
-      <span class="expand-value">{{ record.icon }}</span>
-    </i-col>
-    <i-col span="2">
-      <span class="expand-key">顺序: </span>
-      <span class="expand-value">{{ record.order }}</span>
-    </i-col>
-
-	<i-col span="3" align="center">
-      <span class="expand-key"><i-button type="primary"  v-if="record.deleteFlag==0" v-bind:update-id="record.id" size="small"  onclick="toUpdate(this)" > 修改 </i-button></span>
-      <span class="expand-key"><i-button type="error"  v-if="record.deleteFlag==0" v-bind:del-id="record.id" size="small" onclick="delRecord(this)" > 删除 </i-button></span>
-      <span class="expand-key"><i-button type="primary"  v-if="record.deleteFlag==0" disabled="disabled" v-bind:open-id="record.id" size="small" onclick="openRecord(this)" >恢复 </i-button></span>
-
-      <span class="expand-key"><i-button type="primary"  v-if="record.deleteFlag==1" disabled="disabled" v-bind:update-id="record.id" size="small"  onclick="toUpdate(this)" > 修改 </i-button></span>
-      <span class="expand-key"><i-button type="error"  v-if="record.deleteFlag==1" disabled="disabled" v-bind:del-id="record.id" size="small" onclick="delRecord(this)" > 删除 </i-button></span>
-      <span class="expand-key"><i-button type="primary"  v-if="record.deleteFlag==1" v-bind:open-id="record.id" size="small" onclick="openRecord(this)" >恢复 </i-button></span>
-
-    </i-col>
-
-  </Row>
-</div>
-</script>
 <script layout:fragment="script" th:inline="javascript">
+var template = generatedTemplateContent();
 Vue.component('newRow', {
 	  props: ['row'],
-	  template: '#expand-detail'
+	  template: template
 	});
 var myVue = new Vue({
     el: '#app_content',
@@ -74,7 +41,8 @@ var myVue = new Vue({
       			      }
       			    })
       			}
-      		},{
+      		},
+      		{
                 title: '序号',
                 type:"index",
                 width: 70
@@ -303,6 +271,39 @@ function openRecord(data){
         onCancel:function(){
         }
      });
+}
+
+//生成template内容
+function generatedTemplateContent(){
+	var template = '<div>';
+		template += '  <Row v-for="record in row.children" class="expand-row">';
+		template += '    <i-col span="8">';
+		template += '      <span class="expand-key">功能名称: </span>';
+		template += '	   <span class="expand-value">{{ record.name }}</span>';
+		template += ' 	 </i-col>';
+		template += '	 <i-col span="8">';
+		template += '	   <span class="expand-key">访问路径: </span>';
+		template += '	   <span class="expand-value">{{ record.path }}</span>';
+		template += '	 </i-col>';
+		template += '	 <i-col span="3">';
+		template += '	   <span class="expand-key">图标： </span>';
+		template += '	   <span class="expand-value">{{ record.icon }}</span>';
+		template += '	 </i-col>';
+		template += '	 <i-col span="2">';
+		template += '	   <span class="expand-key">顺序: </span>';
+		template += '	   <span class="expand-value">{{ record.order }}</span>';
+		template += '	 </i-col>';
+		template += '	 <i-col span="3" align="center">';
+		template += '	   <span class="expand-key"><i-button type="primary"  v-if="record.deleteFlag==0" v-bind:update-id="record.id" size="small"  onclick="toUpdate(this)" > 修改 </i-button></span>';
+		template += '	   <span class="expand-key"><i-button type="error"  v-if="record.deleteFlag==0" v-bind:del-id="record.id" size="small" onclick="delRecord(this)" > 删除 </i-button></span>';
+		template += '	   <span class="expand-key"><i-button type="primary"  v-if="record.deleteFlag==0" disabled="disabled" v-bind:open-id="record.id" size="small" onclick="openRecord(this)" >恢复 </i-button></span>';
+		template += '	   <span class="expand-key"><i-button type="primary"  v-if="record.deleteFlag==1" disabled="disabled" v-bind:update-id="record.id" size="small"  onclick="toUpdate(this)" > 修改 </i-button></span>';
+		template += '	   <span class="expand-key"><i-button type="error"  v-if="record.deleteFlag==1" disabled="disabled" v-bind:del-id="record.id" size="small" onclick="delRecord(this)" > 删除 </i-button></span>';
+		template += '	   <span class="expand-key"><i-button type="primary"  v-if="record.deleteFlag==1" v-bind:open-id="record.id" size="small" onclick="openRecord(this)" >恢复 </i-button></span>';
+		template += '	 </i-col>';
+		template += '  </Row>';
+		template += '</div>';
+	return template;
 }
 </script>
 </html>

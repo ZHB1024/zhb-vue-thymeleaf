@@ -17,7 +17,7 @@ li {list-style-type:none;}
         <i-content :style="{padding: '24px', minHeight: '428px', background: '#fff'}">
           <i-form inline ref="formInline" method="post" action="" >
                 <form-item>
-                    	<i-button type="primary" @click="handleSubmit('formInline')" > query MongoDB </i-button>
+                    	<i-button type="primary" @click="handleSubmit('formInline')" :loading="loading"> query MongoDB </i-button>
                 </form-item>
         	</i-form>
 	</i-content>
@@ -29,8 +29,12 @@ li {list-style-type:none;}
 <script layout:fragment="script" th:inline="javascript">
 var myVue = new Vue({
     el: '#app_content',
+    data:{
+    	loading: false
+    },
     methods: {
         handleSubmit:function(name) {
+        	myVue.loading = true;//锁住按钮
         	let param = new URLSearchParams(); 
      	  	axios.post('/htgl/nosqlController/querymongodb/api', param)
      		  	.then(function (response) {
@@ -47,6 +51,7 @@ var myVue = new Vue({
                            closable: true
                        });
                    }
+     			  	myVue.loading = false;//释放按钮
      		  })
         }
     }

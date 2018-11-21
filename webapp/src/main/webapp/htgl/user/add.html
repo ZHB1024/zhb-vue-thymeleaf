@@ -41,7 +41,7 @@ li {list-style-type:none;}
                 	</form-item >
                 	
                   <form-item align="center">
-                		<i-button type="primary" @click="handleSubmit('formValidate')">确 定</i-button>
+                		<i-button type="primary" @click="handleSubmit('formValidate')" :loading="loading">确 定</i-button>
                         <i-button @click="handleReset('formValidate')" style="margin-left: 8px">重置</i-button>
                   </form-item>
                   
@@ -64,6 +64,7 @@ var myVue =  new Vue({
 			  password:'123456',
 			  confirmPassword:'123456'
 		  },
+		  loading: false,
 	      ruleValidate: {
 	    	     userName: [
 	    		    { required: true, message: '请填写用户名', trigger: 'change' }
@@ -85,6 +86,7 @@ var myVue =  new Vue({
 	 },
 	  methods:{
 		   handleSubmit:function (name) {
+			   myVue.loading = true;//锁住按钮
 			   myVue.$refs[name].validate((valid) => {
 				   if (valid){
 					   if(myVue.userInfo.password != myVue.userInfo.confirmPassword){
@@ -118,6 +120,7 @@ var myVue =  new Vue({
 		                            });
 		                        }
 		          		  })
+		          		  myVue.loading = false;//释放按钮
 				   }
 	            })
 	                
