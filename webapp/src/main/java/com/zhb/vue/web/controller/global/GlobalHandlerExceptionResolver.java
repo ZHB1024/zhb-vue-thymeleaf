@@ -60,7 +60,7 @@ public class GlobalHandlerExceptionResolver implements HandlerExceptionResolver,
         logger.error(exceptionMessage);
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("errorMessage", "1234");
-        return new ModelAndView("global.error.index", model);
+        return new ModelAndView("error/index", model);
     }
     
     /**

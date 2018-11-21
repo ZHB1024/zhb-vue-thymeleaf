@@ -45,11 +45,11 @@
         </dependency>
 		
 <!--jsp-jstl -->		
-		<dependency>
+		<!-- <dependency>
 			<groupId>jstl</groupId>
 			<artifactId>jstl</artifactId>
 			<version>${jstl.version}</version>
-		</dependency>
+		</dependency> -->
 
 <!--自定义标签 -->
 		<dependency>
@@ -59,7 +59,7 @@
 		</dependency>
 		
 <!--用于view的显示框架 -->
-        <dependency>
+        <!-- <dependency>
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-api</artifactId>
             <version>${tiles.version}</version>
@@ -83,7 +83,7 @@
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-template</artifactId>
             <version>${tiles.version}</version>
-        </dependency>
+        </dependency> -->
         
         <dependency>
             <groupId>org.hamcrest</groupId>

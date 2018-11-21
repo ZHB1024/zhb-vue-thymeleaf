@@ -41,6 +41,20 @@
     <mvc:default-servlet-handler default-servlet-name="default"/>
     
     <!-- thymeleaf -->
+    <bean id="viewResolver" class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine" />
+        <property name="characterEncoding" value="UTF-8" />
+    </bean>
+    
+    <bean id="templateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver" />
+        <property name="additionalDialects">
+            <set>
+                <ref bean="thymeleafDialect-layout" />
+            </set>
+        </property>
+    </bean>
+    
     <bean id="templateResolver" class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
         <property name="prefix" value="/" />
         <property name="suffix" value=".html" />
@@ -50,20 +64,7 @@
         <property name="cacheable" value="false" />
     </bean>
 
-    <bean id="templateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">
-        <property name="templateResolver" ref="templateResolver" />
-        <property name="additionalDialects">
-            <set>
-                <ref bean="thymeleafDialect-layout" />
-            </set>
-        </property>
-    </bean>
-    <bean id="thymeleafDialect-layout" class="nz.net.ultraq.thymeleaf.LayoutDialect" />
-
-    <bean id="viewResolver" class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
-        <property name="templateEngine" ref="templateEngine" />
-        <property name="characterEncoding" value="UTF-8" />
-    </bean>
+	<bean id="thymeleafDialect-layout" class="nz.net.ultraq.thymeleaf.LayoutDialect" />
 
     <!-- 配置事务 -->
     <tx:annotation-driven transaction-manager="transactionManager2" proxy-target-class="false" />

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+	<meta content="text/html" charset="UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0,user-scalable=no"/>
+	
+	<title>清风舞明月</title>
+
+    <link rel="stylesheet" href="/css/iview.css">
+    <script src="https://t1.chei.com.cn/common/js/vue/2.5.6/vue.js"></script>
+    <script src="/js/iview-3.0.0.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/jquery-3.3.1.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="/css/my.css">
+
+</head>
+
+<body>
+
+	<div id="header" th:insert="/common/header">
+	</div>
+    <div id="body">
+    	<div layout:fragment="content">
+    	</div>
+    </div>
+    <div id="footer" th:insert="/common/footer">
+    </div>
+</body>
+<script type="text/javascript" >
+    $("#body").css('minHeight',$(window).height()-$("#header").height()-$("#footer").height());
+</script>
+</html>
