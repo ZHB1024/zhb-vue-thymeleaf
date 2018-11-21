@@ -1,7 +1,3 @@
-<style>
-    .ivu-menu-vertical .ivu-menu-item{ padding: 8px 40px; }
-</style>
-
 <div id="app_menu" style="float:left;">
 <!-- <Sider hide-trigger :style="{background: '#fff'}"> 
     <i-menu v-bind:active-name="childId" theme="light" width="auto" @on-select="selectMenu"  :open-names="[parentId]" >
@@ -37,7 +33,6 @@ new Vue({
     	  childId:null
       },
       methods: {
-    	  
     	  selectMenu:function (name) {
     		  console.log(name)
     		  var values = name.split("--");

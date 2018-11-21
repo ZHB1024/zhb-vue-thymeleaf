@@ -30,22 +30,14 @@
 	<script type="text/javascript" src="/js/echarts/echarts.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="/css/my.css">
-
+	
 </head>
 
 <body>
     <div id="header" th:insert="/htgl/common/header">
     </div>
     <div id="body">
-    	<div id="app_menu" style="float:left;">
-    		<i-menu active-name="childId" @on-select="selectMenu">
-   				<Menu-Group :title="parent.name" v-for="parent,index in menu">
-        			<Menu-Item v-bind:name="index+1+ '--' + child.id" v-for="child in parent.children" v-bind:to="child.path">
-            			<Icon v-bind:type="child.icon" /></Icon>
-            			<span>{{ child.name }}</span>
-        			</Menu-Item>
-   				</Menu-Group>
-			</i-menu>
+    	<div th:insert="/htgl/common/left">
     	</div>
     	<div layout:fragment="content">
     	</div>
@@ -58,55 +50,6 @@
 </script>
 <script type="text/javascript" >
     $("#body").css('minHeight',$(window).height()-$("#header").height()-$("#footer").height());
-    var COOKIE_NAME = "MenuCookie";
-    var COOKIE_PATH = "/";
-    new Vue({
-          el: '#app_menu',
-          data: {
-        	  menu:[],
-        	  parentId:null,
-        	  childId:null
-          },
-          methods: {
-        	  
-        	  selectMenu:function (name) {
-        		  console.log(name)
-        		  var values = name.split("--");
-        		  var parentId= values[0];
-        		  var childId= values[1];
-        		  var cookieValue = parentId + "--" + childId;
-        		  document.cookie=COOKIE_NAME+ "=" +escape(cookieValue)
-        	  }
-          } ,
-          beforeCreate: function(){
-        	  axios({
-        		  method:'get',
-        		  url:'/htgl/authoritycontroller/getfunctions/api',
-        		  responseType:'json'
-        		}).then((response) => {
-        			this.menu=response.data.data;
-        		});
-          },
-          created: function () {
-        	  //获取点击的菜单
-        	  if (document.cookie.length>0){
-        		  var c_start=document.cookie.indexOf(COOKIE_NAME + "=")
-        		  if (c_start!=-1)
-        		  { 
-        		    c_start=c_start + COOKIE_NAME.length+1 
-        		    c_end=document.cookie.indexOf(";",c_start)
-        		    if (c_end==-1) c_end=document.cookie.length
-        		    var cookieValue = unescape(document.cookie.substring(c_start,c_end))
-        		    var values = cookieValue.split("--");
-        		    console.log(cookieValue);
-        		    this.parentId=values[0];
-        		    this.childId=cookieValue;
-        		  }else{
-        		  }
-        	  }else{
-    		  } 
-          } 
-    });
 </script>
 
 </html>

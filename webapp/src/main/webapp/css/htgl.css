@@ -54,12 +54,13 @@
 	margin-bottom: 16px;
 }
 
-.ivu-table-cell-with-expand {
+/* .ivu-table-cell-with-expand {
 	height: 15px;
 	line-height: 47px;
 	padding: 0;
 	text-align: center;
 }
+*/
 
 .ivu-table td.demo-table-info-column {
 	background-color: #2db7f5;
@@ -96,3 +97,6 @@
 /* 统计 */
 .echart-item{ float: left; width: 700px; height: 600px; margin-right: 50px; }
 .echart-item:last-child{ margin-right: 0; }
+
+/* 左侧菜单 */
+.ivu-menu-vertical .ivu-menu-item{ padding: 8px 40px; }
