@@ -16,6 +16,8 @@ import com.zhb.forever.framework.util.IPUtil;
 import com.zhb.forever.framework.util.StringUtil;
 import com.zhb.forever.nosql.redis.client.RedisClient;
 import com.zhb.forever.nosql.redis.client.RedisClientFactory;
+import com.zhb.remote.client.IRemoteService;
+import com.zhb.remote.client.RemoteServiceFactory;
 import com.zhb.vue.pojo.UserInfoData;
 import com.zhb.vue.service.UserInfoService;
 import com.zhb.vue.web.controller.base.BaseController;
@@ -33,6 +35,8 @@ public class TestController extends BaseController{
     private UserInfoService userInfoService;
     
     private RedisClient redisClient = RedisClientFactory.getRedisClientBean();
+    
+    private IRemoteService remoteService = RemoteServiceFactory.getJCaptchaClientBean();
     
     @RequestMapping(value = "/testredis")
     @Transactional
@@ -120,6 +124,14 @@ public class TestController extends BaseController{
     @Transactional
     public String index() {
         return "htgl/index_thymeleaf";
+    }
+    
+    @RequestMapping("testremote")
+    @Transactional
+    public String testRemote() {
+        String result = remoteService.startRmote();
+        logger.info(result);
+        return result;
     }
     
     

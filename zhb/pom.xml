@@ -220,5 +220,12 @@
             </exclusions>
         </dependency>
         
+        <!-- zhb-remote -->
+        <dependency>
+            <groupId>com.zhb.remote</groupId>
+            <artifactId>zhb-remote-client</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        
   </dependencies>
 </project>
