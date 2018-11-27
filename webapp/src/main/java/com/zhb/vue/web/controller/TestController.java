@@ -129,7 +129,7 @@ public class TestController extends BaseController{
     @RequestMapping("testremote")
     @Transactional
     public String testRemote() {
-        String result = fileClient.getFileName();
+        String result = fileClient.getFileNameById("");
         logger.info(result);
         return "index";
     }
