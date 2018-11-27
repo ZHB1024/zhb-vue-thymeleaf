@@ -11,13 +11,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.zhb.file.client.service.FileServiceClient;
+import com.zhb.file.client.service.FileServiceClientFactory;
 import com.zhb.forever.framework.util.CheckAgentUtil;
 import com.zhb.forever.framework.util.IPUtil;
 import com.zhb.forever.framework.util.StringUtil;
 import com.zhb.forever.nosql.redis.client.RedisClient;
 import com.zhb.forever.nosql.redis.client.RedisClientFactory;
-import com.zhb.remote.client.IRemoteService;
-import com.zhb.remote.client.RemoteServiceFactory;
 import com.zhb.vue.pojo.UserInfoData;
 import com.zhb.vue.service.UserInfoService;
 import com.zhb.vue.web.controller.base.BaseController;
@@ -36,7 +36,7 @@ public class TestController extends BaseController{
     
     private RedisClient redisClient = RedisClientFactory.getRedisClientBean();
     
-    private IRemoteService remoteService = RemoteServiceFactory.getJCaptchaClientBean();
+    private FileServiceClient fileClient = FileServiceClientFactory.getFileServiceClientBean();
     
     @RequestMapping(value = "/testredis")
     @Transactional
@@ -129,9 +129,9 @@ public class TestController extends BaseController{
     @RequestMapping("testremote")
     @Transactional
     public String testRemote() {
-        String result = remoteService.startRmote();
+        String result = fileClient.getFileName();
         logger.info(result);
-        return result;
+        return "index";
     }
     
     

@@ -220,10 +220,10 @@
             </exclusions>
         </dependency>
         
-        <!-- zhb-remote -->
+        <!-- zhb-file-remote -->
         <dependency>
-            <groupId>com.zhb.remote</groupId>
-            <artifactId>zhb-remote-client</artifactId>
+            <groupId>com.zhb.file</groupId>
+            <artifactId>zhb-file-client</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         
