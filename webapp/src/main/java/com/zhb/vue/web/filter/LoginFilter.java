@@ -34,6 +34,7 @@ public class LoginFilter implements Filter {
                 request.setAttribute("redirectUrl", request.getRequestURL());
                 HttpServletResponse response =(HttpServletResponse)arg1;
                 //request.getRequestDispatcher(ctxPath + "/login/login.jsp").forward(request, response);
+                //请求转发,共享的是同一个request，整个过程是一个请求，一个响应。
                 request.getRequestDispatcher(ctxPath + "/logincontroller/tologin").forward(request, response);
             } catch (ServletException | IOException e) {
                 e.printStackTrace();
