@@ -18,6 +18,13 @@
   
   <dependencies>
   
+  <!-- zhb-framework -->
+		<dependency>
+			<groupId>com.zhb.forever</groupId>
+			<artifactId>zhb-framework</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+  
   <!-- zhb-mq -->
 		<dependency>
 			<groupId>com.zhb.forever</groupId>
@@ -45,6 +52,13 @@
 			<artifactId>zhb-captcha</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		
+  <!-- zhb-file-client -->
+        <dependency>
+            <groupId>com.zhb.file</groupId>
+            <artifactId>zhb-file-client</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 		
 		<dependency>
       		<groupId>junit</groupId>
@@ -218,13 +232,6 @@
                     <groupId>org.thymeleaf</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        
-        <!-- zhb-file-remote -->
-        <dependency>
-            <groupId>com.zhb.file</groupId>
-            <artifactId>zhb-file-client</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         
   </dependencies>
