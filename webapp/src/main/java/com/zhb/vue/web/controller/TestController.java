@@ -1,6 +1,8 @@
 package com.zhb.vue.web.controller;
 
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,6 +18,7 @@ import com.zhb.file.client.service.FileServiceClientFactory;
 import com.zhb.forever.framework.util.CheckAgentUtil;
 import com.zhb.forever.framework.util.IPUtil;
 import com.zhb.forever.framework.util.StringUtil;
+import com.zhb.forever.framework.vo.KeyValueVO;
 import com.zhb.forever.nosql.redis.client.RedisClient;
 import com.zhb.forever.nosql.redis.client.RedisClientFactory;
 import com.zhb.vue.pojo.UserInfoData;
@@ -131,6 +134,13 @@ public class TestController extends BaseController{
     public String testRemote() {
         String result = fileClient.getFileNameById("");
         logger.info(result);
+        
+        List<KeyValueVO> fileList = fileClient.getFileList("", "");
+        if (null != fileList) {
+            for (KeyValueVO keyValueVO : fileList) {
+                logger.info(keyValueVO.getId() + " || " + keyValueVO.getKey() + " || " + keyValueVO.getValue());
+            }
+        }
         return "index";
     }
     
