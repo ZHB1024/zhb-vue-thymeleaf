@@ -49,6 +49,11 @@
 <script type="text/javascript" layout:fragment="script">
 </script>
 <script type="text/javascript" >
+	var htmStr = document.createElement("div");
+	if (!!window.ActiveXObject || "ActiveXObject" in window) {
+    	htmStr.innerHTML = '<div id="noticeTopDiv" style="width:100%; line-height:24px; padding:4px; border-bottom:1px solid #fbdbca; background:#fef7f3; font-size:12px;color:#C30;"><div style="width:1000px; margin:0 auto; text-align:center; font-size:14px;">提醒：该系统不支持IE浏览器，请使用其他浏览器进行操作。';
+    	document.body.insertBefore(htmStr,document.body.firstChild);
+	}
     $("#body").css('minHeight',$(window).height()-$("#header").height()-$("#footer").height());
 </script>
 
