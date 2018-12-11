@@ -45,7 +45,7 @@ import com.zhb.vue.thread.SubmitCallable;
 
 public class ThreadController {
     
-    private Logger logger = LoggerFactory.getLogger(ThreadController.class);
+    private static Logger logger = LoggerFactory.getLogger(ThreadController.class);
     
     
     @RequestMapping("/test")
@@ -92,7 +92,7 @@ public class ThreadController {
         new Thread(ft).start();
         try{
             Thread.currentThread().sleep(500);
-            System.out.println(ft.get());
+            logger.info(ft.get() + "" );
         }catch(InterruptedException | ExecutionException e){
             e.printStackTrace();
         }
@@ -118,7 +118,7 @@ public class ThreadController {
         for (Future<Object> f : results) {  
             // 从Future对象上获取任务的返回值，并输出到控制台  
             try {
-                System.out.println(">>>" + f.get().toString());
+                logger.info(">>>" + f.get().toString());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -139,17 +139,17 @@ public class ThreadController {
         ThreadPoolExecutor tpe = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTime, TimeUnit.MILLISECONDS, queue,threadFactory,handler){
             @Override
             protected void beforeExecute(Thread t, Runnable r) { 
-                System.out.println(t.getName() + "---------before----------------");
+                logger.info(t.getName() + "---------before----------------");
             }
             
             @Override
             protected void afterExecute(Runnable r, Throwable t) { 
-                System.out.println(((HandleRunnable)r).toString() + "-------------------after----------------");
+                logger.info(((HandleRunnable)r).toString() + "-------------------after----------------");
             }
             
             @Override
             protected void terminated() { 
-                System.out.println("-------------------terminated----------------");
+                logger.info("-------------------terminated----------------");
             }
         };
         
@@ -182,7 +182,7 @@ public class ThreadController {
         // 获取所有并发任务的运行结果  
         for (Future<Object> f : results) {  
             // 从Future对象上获取任务的返回值，并输出到控制台  
-            System.out.println(">>>" + f.get().toString());  
+            logger.info(">>>" + f.get().toString());  
         }  
     }
     
@@ -266,16 +266,16 @@ public class ThreadController {
                 @Override
                 public void run() {
                     try {
-                        System.out.println( Thread.currentThread().getName() + "进入了run");  
+                        logger.info( Thread.currentThread().getName() + "进入了run");  
                         countDownLatch.await();//等待countDownLatch为0
-                        System.out.println( Thread.currentThread().getName() + "开始执行,time: " + System.currentTimeMillis());
+                        logger.info( Thread.currentThread().getName() + "开始执行,time: " + System.currentTimeMillis());
                         if(lock.tryLock()){
                             try{
                                 if (num.get() == 0) {
-                                    System.out.println( Thread.currentThread().getName() + "进入" );
+                                    logger.info( Thread.currentThread().getName() + "进入" );
                                     int temp =num.incrementAndGet();
                                     if (temp == 1) {
-                                        System.out.println( Thread.currentThread().getName() + ":" + temp);  
+                                        logger.info( Thread.currentThread().getName() + ":" + temp);  
                                     }
                                 }
                             }finally {
@@ -301,7 +301,7 @@ public class ThreadController {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("num:" + num);
+        logger.info("num:" + num);
         
     }
     
@@ -313,9 +313,9 @@ public class ThreadController {
                 @Override
                 public void run() {
                     try {
-                        System.out.println(Thread.currentThread().getName() + "进入,time:" + System.currentTimeMillis() + " 等待 .......");
+                        logger.info(Thread.currentThread().getName() + "进入,time:" + System.currentTimeMillis() + " 等待 .......");
                         cyclicBarrier.await();//等待线程个数等于 CyclicBarrier初始化的3
-                        System.out.println(Thread.currentThread().getName() + ",time:" + System.currentTimeMillis());
+                        logger.info(Thread.currentThread().getName() + ",time:" + System.currentTimeMillis());
                     } catch (InterruptedException | BrokenBarrierException e) {
                         e.printStackTrace();
                     }
@@ -344,10 +344,10 @@ public class ThreadController {
                         e.printStackTrace();
                     }
                     try {
-                        System.out.println(Thread.currentThread().getName() + "进入,time:" + System.currentTimeMillis() );
+                        logger.info(Thread.currentThread().getName() + "进入,time:" + System.currentTimeMillis() );
                         flag = true;
                     } finally {
-                        System.out.println(Thread.currentThread().getName() + "离开,time:" + System.currentTimeMillis());
+                        logger.info(Thread.currentThread().getName() + "离开,time:" + System.currentTimeMillis());
                         if (flag) {
                             semaphore.release();//释放信号量
                         }
@@ -370,35 +370,35 @@ public class ThreadController {
         Thread thread01 = new Thread(new Runnable() {
             @Override
             public void run() {
-                System.out.println("向队列里添加------");
+                logger.info("向队列里添加------");
                 for(int i=0; i< 10;i++){
                     while (!queue.offer(i+"num")) {
-                        System.out.println("队列已满------等待消费-------");
+                        logger.info("队列已满------等待消费-------");
                         try {
                             Thread.currentThread().sleep(10);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                    System.out.println(i+"num," + "添加成功------");
+                    logger.info(i+"num," + "添加成功------");
                 }
             }
         });
         Thread thread02 = new Thread(new Runnable() {
             @Override
             public void run() {
-                System.out.println("从队列里取------");
+                logger.info("从队列里取------");
                 for(int i=0; i< 10;i++){
                     String value = null;
                     while(StringUtil.isBlank(value=queue.poll())){
-                        System.out.println("队列已空------等待添加-------------");
+                        logger.info("队列已空------等待添加-------------");
                         try {
                             Thread.currentThread().sleep(10);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                    System.out.println("取出的值为： " + value);
+                    logger.info("取出的值为： " + value);
                 }
             }
         });
@@ -471,11 +471,11 @@ public class ThreadController {
             e.printStackTrace();
         }
 
-        System.out.println(value.get());
+        logger.info(value.get());
 
         for (Future<String> future:results) {
             try {
-                System.out.println(future.get());
+                logger.info(future.get());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
