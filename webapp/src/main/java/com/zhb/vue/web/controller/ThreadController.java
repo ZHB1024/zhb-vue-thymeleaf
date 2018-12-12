@@ -127,7 +127,7 @@ public class ThreadController {
         }  
     }
     
-  //------------------------------------ThreadPoolExecutor----自定义 线程日志--------------------------
+  //------------------------------------ThreadPoolExecutor----自定义 线程池，记录线程信息 日志--------------------------
     public static void threadPoolExecutorByMyself(){
         int corePoolSize = 5;
         int maxPoolSize = 5;
