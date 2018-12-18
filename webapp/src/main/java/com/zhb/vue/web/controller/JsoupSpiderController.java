@@ -1,5 +1,6 @@
 package com.zhb.vue.web.controller;
 
+import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSONObject;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.zhb.forever.framework.util.AjaxData;
+import com.zhb.forever.framework.util.DownloadUtil;
 import com.zhb.forever.framework.util.JsoupUtil;
 import com.zhb.forever.framework.util.PropertyUtil;
 import com.zhb.forever.framework.vo.KeyValueVO;
@@ -63,6 +65,12 @@ public class JsoupSpiderController {
                 }
             }
         }*/
+        try {
+            DownloadUtil.downLoadFromUrl("http://cache1.361lu.com/m3u8/VmN0SkJ3RDRZcjd6T2hzdnI4Wmg2b3UxZ2JsWUZON2F6MEQ1bkhJQ1I0NXh3a3lRem42aWppM1NmTGlvUnA1WjllcTNnck5Zd3VKaU1VK1g4R2dyemdSL0kvU1RIRVk4MGJVTHZWK01LUjJaS1A3dmxRYlpMWVdWK0Z3VjNpRVkxU2tQcFFMa2drMkFaaWt3aks4NUxyOTZhNUJMZ3d2RFhURTZza25qek9vPQ==", "1635.mp4", PropertyUtil.getUploadPath());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return "htgl/spider/index";
     }
 
