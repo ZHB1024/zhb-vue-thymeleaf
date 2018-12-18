@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.zhb.file.client.service.FileServiceClient;
 import com.zhb.file.client.service.FileServiceClientFactory;
+import com.zhb.forever.framework.design.pattern.Singleton;
 import com.zhb.forever.framework.util.CheckAgentUtil;
 import com.zhb.forever.framework.util.IPUtil;
 import com.zhb.forever.framework.util.StringUtil;
@@ -126,6 +127,9 @@ public class TestController extends BaseController{
     @RequestMapping("index")
     @Transactional
     public String index() {
+        System.out.println(Singleton.test);
+        Singleton.getInstance();
+        
         return "htgl/index_thymeleaf";
     }
     

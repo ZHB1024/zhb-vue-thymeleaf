@@ -23,7 +23,7 @@
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
     
-    <!-- <bean id="golbalHandlerExceptionResolver" class="com.zhb.vue.web.controller.golbal.GolbalHandlerExceptionResolver">
+    <!-- <bean id="golbalHandlerExceptionResolver" class="com.zhb.vue.web.controller.global.GlobalHandlerExceptionResolver">
     </bean> -->
     
     <mvc:resources location="/images/" mapping="/images/**" />
