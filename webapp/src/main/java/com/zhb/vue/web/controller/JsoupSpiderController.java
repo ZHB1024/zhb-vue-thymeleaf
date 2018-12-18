@@ -12,11 +12,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONObject;
+import com.lmax.disruptor.dsl.Disruptor;
 import com.zhb.forever.framework.util.AjaxData;
 import com.zhb.forever.framework.util.JsoupUtil;
 import com.zhb.forever.framework.util.PropertyUtil;
+import com.zhb.forever.framework.vo.KeyValueVO;
+import com.zhb.forever.mq.disruptor.DisruptorUtil;
 import com.zhb.vue.thread.spider.mtsqom.DownloadFromQueueRunnable;
 import com.zhb.vue.thread.spider.mtsqom.ReadEndUrlToQueueRunnable;
+import com.zhb.vue.thread.spider.mtsqom.disruptor.ConsumerDisruptor;
+import com.zhb.vue.thread.spider.mtsqom.disruptor.ProducerDisruptor;
+import com.zhb.vue.thread.spider.mtsqom.disruptor.ProducerRunnable;
 import com.zhb.vue.thread.spider.qbl.ReadUrlToQueueRunnable;
 import com.zhb.vue.thread.spider.yx.SpiderYXRunnable;
 import com.zhb.vue.web.util.WebAppUtil;
@@ -144,6 +150,46 @@ public class JsoupSpiderController {
         ExecutorService es = Executors.newFixedThreadPool(1);
         es.execute(new SpiderYXRunnable(1, 137, 20, baseUrl,WebAppUtil.getUserId(request)));
         es.shutdown();
+        
+        ajaxData.setFlag(true);
+        return ajaxData;
+    }
+    
+    //http://www.mtl018.com/forum-58-1.html
+    @RequestMapping(value="/spideryellowbydisruptor",method=RequestMethod.POST)
+    @ResponseBody
+    @Transactional
+    public AjaxData spiderYellowByDisruptor(HttpServletRequest request,HttpServletResponse response){
+        AjaxData ajaxData = new AjaxData();
+        String userId = WebAppUtil.getUserId(request);
+        String url = "http://www.mtl018.com/forum.php?mod=forumdisplay&fid=160&page=";
+        String urlTarget = PropertyUtil.getSpiderUrlTarget();
+
+        int beginPage = 1;
+        int endPage = 45;
+        int totalThread = 10;
+        int per = endPage/totalThread;
+        
+        Disruptor<KeyValueVO> disruptor = DisruptorUtil.getDisruptor();
+        ConsumerDisruptor[] consumerDisruptors = new ConsumerDisruptor[totalThread];
+        for(int i=0;i < totalThread;i++) {
+            consumerDisruptors[i] = new ConsumerDisruptor("消费者-"+(i+1), userId);
+        }
+        disruptor.handleEventsWithWorkerPool(consumerDisruptors);
+        disruptor.start();
+        
+        ExecutorService es = Executors.newFixedThreadPool(totalThread);
+        for(int i=0;i<totalThread;i++) {
+            if(i != totalThread-1) {
+                ProducerDisruptor producer = new ProducerDisruptor(disruptor.getRingBuffer(),"生产者"+(i+1) ,beginPage+(i*per),beginPage+(i*per)+per-1,url);
+                es.execute(new ProducerRunnable(producer));
+            }else {
+                ProducerDisruptor producer = new ProducerDisruptor(disruptor.getRingBuffer(),"生产者"+(i+1) ,beginPage+(i*per),endPage,url);
+                es.execute(new ProducerRunnable(producer));
+            }
+        }
+        es.shutdown();
+        disruptor.shutdown();
         
         ajaxData.setFlag(true);
         return ajaxData;

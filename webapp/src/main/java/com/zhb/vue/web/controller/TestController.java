@@ -20,6 +20,7 @@ import com.zhb.forever.framework.util.CheckAgentUtil;
 import com.zhb.forever.framework.util.IPUtil;
 import com.zhb.forever.framework.util.StringUtil;
 import com.zhb.forever.framework.vo.KeyValueVO;
+import com.zhb.forever.mq.disruptor.DisruptorUtil;
 import com.zhb.forever.nosql.redis.client.RedisClient;
 import com.zhb.forever.nosql.redis.client.RedisClientFactory;
 import com.zhb.vue.pojo.UserInfoData;
@@ -127,8 +128,8 @@ public class TestController extends BaseController{
     @RequestMapping("index")
     @Transactional
     public String index() {
-        System.out.println(Singleton.test);
-        Singleton.getInstance();
+        
+        DisruptorUtil.testDisruptor();
         
         return "htgl/index_thymeleaf";
     }
