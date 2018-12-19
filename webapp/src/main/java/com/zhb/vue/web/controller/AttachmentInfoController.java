@@ -431,11 +431,8 @@ public class AttachmentInfoController {
             e1.printStackTrace();
         }
         
-        //response.setContentType(data.getContentType());
-        
         //加水印 
         DownloadUtil.downloadAttachmentWithWaterPrint(request, response, data.getFilePath(), data.getContentType().contains("gif"));
-        
     }
     
     //获取缩略图
@@ -488,7 +485,73 @@ public class AttachmentInfoController {
             DownloadUtil.downloadAttachment(request, response, data.getThumbnailPath());
         }
         
+    }
+    
+    
+     //读取附件内容
+    @RequestMapping(value = "/readfile/api")
+    @Transactional
+    @ResponseBody
+    public AjaxData readFile(HttpServletRequest request,HttpServletResponse response,String id) {
+        AjaxData ajaxData = new AjaxData();
+        if (StringUtil.isBlank(WebAppUtil.getUserId(request))) {
+            ajaxData.setFlag(false);
+            ajaxData.addMessage("请先登录");
+            return ajaxData;
+        }
         
+        if(StringUtil.isBlank(id)) {
+            ajaxData.setFlag(false);
+            ajaxData.addMessage("文件不存在");
+            return ajaxData;
+        }
+        
+        AttachmentInfoData data = attachmentInfoService.getAttachmentInfoById(id);
+        if (null == data ){
+            ajaxData.setFlag(false);
+            ajaxData.addMessage("文件不存在");
+            return ajaxData;
+        }
+        File file = new File(data.getFilePath());
+        if (!file.exists()) {
+            attachmentInfoService.delete(data);
+            ajaxData.setFlag(false);
+            ajaxData.addMessage("文件不存在");
+            return ajaxData;
+        }
+        
+        try {
+            String result = "";
+            String fileName = data.getFileName();
+            if (fileName.contains("docx")) {
+                result = File2HtmlConvert.docx2Html(new FileInputStream(file), EncodeUtil.getUtf8(), PropertyUtil.getTempDownloadPath());
+            }else if (fileName.contains("doc")) {
+                result = File2HtmlConvert.doc2Html(new FileInputStream(file), EncodeUtil.getUtf8(), PropertyUtil.getTempDownloadPath());
+            }else if (fileName.contains("xlsx")) {
+                byte[] bytes = FileUtil.readFileAsBytes(file);
+                ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+                result = File2HtmlConvert.xls2Html(bais, "xlsx", EncodeUtil.getUtf8());
+            }else if (fileName.contains("xls")) {
+                byte[] bytes = FileUtil.readFileAsBytes(file);
+                ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+                result = File2HtmlConvert.xls2Html(bais, "xls", EncodeUtil.getUtf8());
+            }else if(fileName.contains("txt")) {
+                result = File2HtmlConvert.readTxt2Html(file);
+            }else if (fileName.contains("ppt")) {
+                result = File2HtmlConvert.readPPT2String(file);
+            }else if (fileName.contains("pdf")) {
+                result = File2HtmlConvert.readPDF2String(file);
+            }
+            ajaxData.setFlag(true);
+            ajaxData.setData(result);
+            return ajaxData;
+        } catch (IOException | TransformerException | ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        
+        ajaxData.setFlag(false);
+        ajaxData.addMessage("读取失败");
+        return ajaxData;
     }
     
     //上传头像 获取layer
@@ -700,72 +763,6 @@ public class AttachmentInfoController {
     @ModelAttribute("attachmentTypeList")
     public List<KeyValueVO> algorithmTypeList() {
         return AttachmentTypeEnum.getAll();
-    }
-    
-    //读取附件内容
-    @RequestMapping(value = "/readfile/api")
-    @Transactional
-    @ResponseBody
-    public AjaxData readFile(HttpServletRequest request,HttpServletResponse response,String id) {
-        AjaxData ajaxData = new AjaxData();
-        if (StringUtil.isBlank(WebAppUtil.getUserId(request))) {
-            ajaxData.setFlag(false);
-            ajaxData.addMessage("请先登录");
-            return ajaxData;
-        }
-        
-        if(StringUtil.isBlank(id)) {
-            ajaxData.setFlag(false);
-            ajaxData.addMessage("文件不存在");
-            return ajaxData;
-        }
-        
-        AttachmentInfoData data = attachmentInfoService.getAttachmentInfoById(id);
-        if (null == data ){
-            ajaxData.setFlag(false);
-            ajaxData.addMessage("文件不存在");
-            return ajaxData;
-        }
-        File file = new File(data.getFilePath());
-        if (!file.exists()) {
-            attachmentInfoService.delete(data);
-            ajaxData.setFlag(false);
-            ajaxData.addMessage("文件不存在");
-            return ajaxData;
-        }
-        
-        try {
-            String result = "";
-            String fileName = data.getFileName();
-            if (fileName.contains("docx")) {
-                result = File2HtmlConvert.docx2Html(new FileInputStream(file), EncodeUtil.getUtf8(), PropertyUtil.getTempDownloadPath());
-            }else if (fileName.contains("doc")) {
-                result = File2HtmlConvert.doc2Html(new FileInputStream(file), EncodeUtil.getUtf8(), PropertyUtil.getTempDownloadPath());
-            }else if (fileName.contains("xlsx")) {
-                byte[] bytes = FileUtil.readFileAsBytes(file);
-                ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-                result = File2HtmlConvert.xls2Html(bais, "xlsx", EncodeUtil.getUtf8());
-            }else if (fileName.contains("xls")) {
-                byte[] bytes = FileUtil.readFileAsBytes(file);
-                ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-                result = File2HtmlConvert.xls2Html(bais, "xls", EncodeUtil.getUtf8());
-            }else if(fileName.contains("txt")) {
-                result = File2HtmlConvert.readTxt2Html(file);
-            }else if (fileName.contains("ppt")) {
-                result = File2HtmlConvert.readPPT2String(file);
-            }else if (fileName.contains("pdf")) {
-                result = File2HtmlConvert.readPDF2String(file);
-            }
-            ajaxData.setFlag(true);
-            ajaxData.setData(result);
-            return ajaxData;
-        } catch (IOException | TransformerException | ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-        
-        ajaxData.setFlag(false);
-        ajaxData.addMessage("读取失败");
-        return ajaxData;
     }
     
     //共用查询,不分页
