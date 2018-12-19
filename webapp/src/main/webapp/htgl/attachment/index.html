@@ -82,33 +82,42 @@ var myVue = new Vue({
             	width: 100,
             	render: (h, params) => {
             	    return h('div',  [
-            	        h('img', {
-            	          props: {
-            	            type: 'primary',
-            	            size: 'small'
-            	          },
-                          style: {
-                              marginRight: '10px'
-                          },
-            	          attrs: {
-            	            src: params.row.thumbnailUrl, style: 'width: 40px;height: 40px;border-radius: 2px;'
-            	          },
-                          on: {
-                              click: () => {
-                              	  myVue.showOriginal(params)
-                              }
-                          }
-            	        }),
+            	        h('a', {
+            	          			props: {
+            	            					type: 'primary',
+            	            					size: 'small'
+            	          			},
+                          			style: {
+                              					marginRight: '10px'
+                          			},
+                          			class:'group',
+            	          			attrs: {
+            	            					href: params.row.originalUrl, 
+            	            					style: 'width: 40px;height: 40px;border-radius: 2px;',
+            	            					rel:'group',
+            	            					title:params.row.fileName
+            	          			}
+            	        	    },[h('img', {
+              	          						props: {
+              	            								type: 'primary',
+              	            								size: 'small'
+              	          						},
+              	          						attrs: {
+              	            								src: params.row.thumbnailUrl, 
+              	            								style: 'width: 40px;height: 40px;border-radius: 2px;'
+              	          						}
+              	        			})]
+            	        ) ,
             	        h('Icon', {
-              	          props: {
-              	            type: 'md-arrow-down',
-              	            color:'green'
-              	          },
-                            on: {
-                                click: () => {
-                                	  myVue.downAttachment(params)
-                                }
-                            }
+              	          			props: {
+              	            					type: 'md-arrow-down',
+              	            					color:'green'
+              	          			},
+                            		on: {
+                                			click: () => {
+                                	  						myVue.downAttachment(params)
+                                			}
+                            		}
               	        })
             	      ]);
             	  }
@@ -221,6 +230,8 @@ var myVue = new Vue({
             }
         ]
     },
+    mounted: function () { 
+    },
     created: function () {
     	axios.all([
     	    axios.get('/htgl/attachmentinfocontroller/getattachmentinfopage/api'),
@@ -229,10 +240,19 @@ var myVue = new Vue({
     		  myVue.tableDatas = attachmentinfoResp.data.data.result;
     		  flushPage(attachmentinfoResp.data.data);
     		  //myVue.typeParm = typeResp.data.data;
+    		  myVue.$nextTick(() => {
+    			  $(".group").colorbox({
+    	            	photo:true,
+    	                height: "80%",
+    	                maxWidth: "90%",
+    	                width: "1000px",
+    	                fixed: true,
+    	            });
+				})
     	  }));
     },
     methods: {
-       remove: function (index) {
+        remove: function (index) {
     	   this.$Modal.confirm({
                title: '提示',
                content: '您确定要删除么？',
@@ -252,6 +272,15 @@ var myVue = new Vue({
        				 		 myVue.tableDatas = response.data.data.result;
        				 		 flushPage(response.data.data);
        				  		 myVue.$forceUpdate();
+       				  		 myVue.$nextTick(() => {
+       	    			  			$(".group").colorbox({
+       	    	            				photo:true,
+       	    	                			height: "80%",
+       	    	                			maxWidth: "90%",
+       	    	                			width: "1000px",
+       	    	                			fixed: true,
+       	    	            		});
+       							})
                      		}else{
                    	  		myVue.$Message.error({
                              		content: response.data.errorMessages,
@@ -282,6 +311,15 @@ var myVue = new Vue({
     				  myVue.tableDatas = response.data.data.result;
     				  flushPage(response.data.data);
     				  myVue.$forceUpdate();
+    				  myVue.$nextTick(() => {
+    	    			  $(".group").colorbox({
+    	    	            	photo:true,
+    	    	                height: "80%",
+    	    	                maxWidth: "90%",
+    	    	                width: "1000px",
+    	    	                fixed: true,
+    	    	            });
+    					})
                   }else{
                 	  myVue.$Message.error({
                           content: response.data.errorMessages,
@@ -304,6 +342,15 @@ var myVue = new Vue({
     				  myVue.tableDatas = response.data.data.result;
     				  flushPage(response.data.data);
     				  myVue.$forceUpdate();
+    				  myVue.$nextTick(() => {
+    	    			  $(".group").colorbox({
+    	    	            	photo:true,
+    	    	                height: "80%",
+    	    	                maxWidth: "90%",
+    	    	                width: "1000px",
+    	    	                fixed: true,
+    	    	            });
+    					})
                   }else{
                 	  myVue.$Message.error({
                           content: response.data.errorMessages,
@@ -326,6 +373,15 @@ var myVue = new Vue({
     				  myVue.tableDatas = response.data.data.result;
     				  flushPage(response.data.data);
     				  myVue.$forceUpdate();
+    				  myVue.$nextTick(() => {
+    	    			  $(".group").colorbox({
+    	    	            	photo:true,
+    	    	                height: "80%",
+    	    	                maxWidth: "90%",
+    	    	                width: "1000px",
+    	    	                fixed: true,
+    	    	            });
+    					})
                   }else{
                 	  myVue.$Message.error({
                           content: response.data.errorMessages,

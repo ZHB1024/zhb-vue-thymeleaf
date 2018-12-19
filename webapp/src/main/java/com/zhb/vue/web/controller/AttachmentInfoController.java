@@ -387,7 +387,7 @@ public class AttachmentInfoController {
         if (StringUtil.isBlank(WebAppUtil.getUserId(request))) {
             String rootPath = WebAppUtil.getRootPath(request);
             String imagePath = rootPath + "images" + File.separator + "loading.gif";
-            response.setContentType("image/jpeg");
+            response.setContentType("image/gif");
             DownloadUtil.downloadAttachment(request, response, imagePath);
             return;
         }
@@ -395,7 +395,7 @@ public class AttachmentInfoController {
         if(StringUtil.isBlank(id)) {
             String rootPath = WebAppUtil.getRootPath(request);
             String imagePath = rootPath + "images" + File.separator + "loading.gif";
-            response.setContentType("image/jpeg");
+            response.setContentType("image/gif");
             DownloadUtil.downloadAttachment(request, response, imagePath);
             return;
         }
@@ -404,7 +404,7 @@ public class AttachmentInfoController {
         if (null == data || (AttachmentTypeEnum.IMAGE.getIndex() != data.getType() && AttachmentTypeEnum.YELLOW.getIndex() != data.getType())){
             String rootPath = WebAppUtil.getRootPath(request);
             String imagePath = rootPath + "images" + File.separator + "loading.gif";
-            response.setContentType("image/jpeg");
+            response.setContentType("image/gif");
             DownloadUtil.downloadAttachment(request, response, imagePath);
             return;
         }
@@ -416,21 +416,24 @@ public class AttachmentInfoController {
             return;
         }
         
-        try {
-            //在浏览器缓存30天
-            DownloadUtil.processExpiresTime(response);
-            DownloadUtil.processBeforeDownload(request, response, data.getContentType(), data.getFileName());
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        
         File file = new File(data.getFilePath());
         if (!file.exists()) {
             attachmentInfoService.delete(data);
             return ;
         }
         
-        //加水印 下载
+        //在浏览器缓存30天
+        DownloadUtil.processExpiresTime(response);
+        
+        try {
+            DownloadUtil.processBeforeDownload(request, response, data.getContentType(), data.getFileName());
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        
+        //response.setContentType(data.getContentType());
+        
+        //加水印 
         DownloadUtil.downloadAttachmentWithWaterPrint(request, response, data.getFilePath(), data.getContentType().contains("gif"));
         
     }
