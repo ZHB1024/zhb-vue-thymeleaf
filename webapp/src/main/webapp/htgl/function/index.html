@@ -34,7 +34,7 @@ var myVue = new Vue({
     		{
             	type: 'expand',
       			width: 100,
-      			render: (h, params) => {
+      			render: function(h, params)  {
       			    return h("new-row", {
       			       props: {
       			    	  row: params.row
@@ -73,7 +73,7 @@ var myVue = new Vue({
                 key: 'action',
                 width: 200,
                 align: 'center',
-                render: (h, params) => {
+                render: function(h, params)  {
                 	var status = myVue.tableDatas[params.index].deleteFlag,openFlag,delFlag;
                 	if(status == 0 ){
                 		openFlag = 'disabled';
@@ -92,7 +92,7 @@ var myVue = new Vue({
                                 marginRight: '5px'
                             },
                             on: {
-                                click: () => {
+                                click: function()  {
                                 	myVue.modify(params.index)
                                 }
                             }
@@ -107,7 +107,7 @@ var myVue = new Vue({
                                 marginRight: '5px'
                             },
                             on: {
-                                click: () => {
+                                click: function()  {
                                 	  myVue.remove(params.index)
                                 }
                             }
@@ -119,7 +119,7 @@ var myVue = new Vue({
                                 disabled:openFlag
                             },
                             on: {
-                                click: () => {
+                                click: function()  {
                                 	myVue.open(params.index)
                                 }
                             }

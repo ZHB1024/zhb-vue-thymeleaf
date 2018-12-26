@@ -54,7 +54,7 @@ var myVue =  new Vue({
             },
             upload:function () {
                 this.loadingStatus = true;
-                setTimeout(() => {
+                setTimeout(function() {
                     this.file = null;
                     this.loadingStatus = false;
                     this.$Message.success('Success')

@@ -115,7 +115,7 @@ var myVue =  new Vue({
 		  mzParm:[],
 		  byyxParm:[],
 		  limitDate:{
-			  disabledDate (date) {
+			  disabledDate:function(date) {
 		             return date.valueOf() > Date.now() ;
 		         }
 		  },
@@ -176,7 +176,7 @@ var myVue =  new Vue({
 	 },
 	  methods:{
 		   handleSubmit:function (name) {
-			   myVue.$refs[name].validate((valid) => {
+			   myVue.$refs[name].validate(function(valid)  {
 				   if (valid){
 					   let param = new URLSearchParams(); 
 		          	  	param.append("id",myVue.userInfo.id); 

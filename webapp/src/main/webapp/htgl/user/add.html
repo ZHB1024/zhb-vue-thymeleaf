@@ -87,7 +87,7 @@ var myVue =  new Vue({
 	  methods:{
 		   handleSubmit:function (name) {
 			   myVue.loading = true;//锁住按钮
-			   myVue.$refs[name].validate((valid) => {
+			   myVue.$refs[name].validate(function(valid)  {
 				   if (valid){
 					   if(myVue.userInfo.password != myVue.userInfo.confirmPassword){
 						   myVue.$Message.warning({

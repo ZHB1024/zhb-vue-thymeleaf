@@ -95,7 +95,7 @@ var myVue = new Vue({
                 key: 'action',
                 width: 150,
                 align: 'center',
-                render: (h, params) => {
+                render: function(h, params){
                 	return h('div', [
                         h('i-button', {
                             props: {
@@ -103,7 +103,7 @@ var myVue = new Vue({
                                 size: 'small'
                             },
                             on: {
-                                click: () => {
+                                click: function() {
                                 	  myVue.remove(params.index)
                                 }
                             }

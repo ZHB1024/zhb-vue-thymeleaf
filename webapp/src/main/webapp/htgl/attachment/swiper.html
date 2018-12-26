@@ -65,7 +65,7 @@ var myVue = new Vue({
       				myVue.imgList = response.data.data.result;
       				flushPage(response.data.data);
       			    // 在修改数据之后使用 $nextTick，则可以在回调中获取更新后的 DOM
-      				myVue.$nextTick(() => {
+      				myVue.$nextTick(function(){
 		  		    	new Swiper('.swiper-container', {
 		  		    		effect : 'coverflow',
 		  		    		slidesPerView: 3,
@@ -100,7 +100,7 @@ var myVue = new Vue({
       			  if(response.data.flag){
       				myVue.imgList = response.data.data.result;
       				flushPage(response.data.data);
-      				myVue.$nextTick(() => {
+      				myVue.$nextTick(function(){
 		  		    	new Swiper('.swiper-container', {
 		  		    		effect : 'coverflow',
 		  		    		slidesPerView: 3,
@@ -134,7 +134,7 @@ var myVue = new Vue({
 		  			myVue.imgList = response.data.data.result;
 		  			flushPage(response.data.data);
 		  		    // 在修改数据之后使用 $nextTick，则可以在回调中获取更新后的 DOM
-		  		  	myVue.$nextTick(() => {
+		  		  	myVue.$nextTick(function(){
 		  		    	new Swiper('.swiper-container', {
 		  		    		effect : 'coverflow',
 		  		    		slidesPerView: 3,

@@ -67,7 +67,7 @@ var myVue = new Vue({
             	title: '附件', 
             	key: 'thumbnailUrl',
             	width: 100,
-            	render: (h, params) => {
+            	render: function(h, params)  {
             	    return h('div',  [
             	        h('img', {
             	          props: {
@@ -81,7 +81,7 @@ var myVue = new Vue({
             	            src: params.row.thumbnailUrl, style: 'width: 40px;height: 40px;border-radius: 2px;'
             	          },
                           on: {
-                              click: () => {
+                              click: function()  {
                               	  myVue.showOriginal(params)
                               }
                           }
@@ -92,7 +92,7 @@ var myVue = new Vue({
               	            color:'green'
               	          },
                             on: {
-                                click: () => {
+                                click: function()  {
                                 	  myVue.downAttachment(params)
                                 }
                             }
@@ -105,14 +105,14 @@ var myVue = new Vue({
                 key: 'fileName',
                 minWidth: 100,
                 sortable:true,
-                render: (h, params) => {
+                render: function(h, params)  {
                 	return h('div', [
                 		h('a', {
                             style: {
                                 marginRight: '5px'
                             },
                             on: {
-                                click: () => {
+                                click: function()  {
                                 	  myVue.showinfo(params)
                                 }
                             }
@@ -142,7 +142,7 @@ var myVue = new Vue({
                 key: 'likeDegree',
                 minWidth: 150,
                 align: "center",
-                render: (h, params) => {
+                render: function(h, params)  {
                 	var colorFlag = 'green';
                 	var leftEditorFlag,rightEditorFlag ;
                 	if('1' == params.row.likeDegree){
@@ -163,7 +163,7 @@ var myVue = new Vue({
                             },
                             class: "left-btn",
                             on: {
-                              click: () => {
+                              click: function()  {
                                 this.myVue.upLikeDegree(params.index,-1);
                               }
                             }
@@ -183,7 +183,7 @@ var myVue = new Vue({
                             },
                             class: "right-btn",
                             on: {
-                              click: () => {
+                              click: function()  {
                                 this.myVue.upLikeDegree(params.index,1);
                               }
                             }
@@ -196,7 +196,7 @@ var myVue = new Vue({
                 key: 'action',
                 width: 150,
                 align: 'center',
-                render: (h, params) => {
+                render: function(h, params)  {
                 	return h('div', [
                         h('i-button', {
                             props: {
@@ -204,7 +204,7 @@ var myVue = new Vue({
                                 size: 'small'
                             },
                             on: {
-                                click: () => {
+                                click: function()  {
                                 	  myVue.remove(params.index)
                                 }
                             }
@@ -283,7 +283,66 @@ var myVue = new Vue({
                        });
                    }
      		  })
-        }
+        },
+        //点击页码查询
+        searchPage:function (page) {
+        	let param = new URLSearchParams(); 
+      	  	if(undefined == myVue.formParm.type){
+      		  	myVue.formParm.type = "";
+      	  	}
+      	  	param.append("fileName",myVue.formParm.fileName); 
+      	  	param.append("type",myVue.formParm.type);
+      	  	param.append("pageSize",myVue.pageParm.pageCount); 
+      	    param.append("currentPage",page); 
+      	    axios.post('/htgl/searchController/solrsearch/api', param)
+		  	.then(function (response) {
+			  	if(response.data.flag){
+			  		myVue.tableDatas = response.data.data.result;
+				    flushPage(response.data.data);
+				    myVue.$forceUpdate();
+             }else{
+           	  myVue.$Message.error({
+                     content: response.data.errorMessages,
+                     duration: 3,
+                     closable: true
+                 });
+             }
+		  })
+        },
+        //改变每页大小 
+        changePageSize:function(pageSize){
+        	let param = new URLSearchParams(); 
+      	  	if(undefined == myVue.formParm.type){
+      		  	myVue.formParm.type = "";
+      	  	}
+      	  	param.append("fileName",myVue.formParm.fileName); 
+      	  	param.append("type",myVue.formParm.type);
+      	  param.append("pageSize",pageSize); 
+      	  param.append("currentPage",1); 
+      	  axios.post('/htgl/attachmentinfocontroller/getattachmentinfopage/api', param)
+      		  .then(function (response) {
+      			  if(response.data.flag){
+      				  myVue.tableDatas = response.data.data.result;
+      				  flushPage(response.data.data);
+      				  myVue.$forceUpdate();
+      				  myVue.$nextTick(function() {
+      	    			  $(".group").colorbox({
+      	    	            	photo:true,
+      	    	                height: "80%",
+      	    	                maxWidth: "90%",
+      	    	                width: "1000px",
+      	    	                fixed: true,
+      	    	            });
+      					})
+                    }else{
+                  	  myVue.$Message.error({
+                            content: response.data.errorMessages,
+                            duration: 3,
+                            closable: true
+                        });
+                    }
+      		  })
+        },
     }
 });
 

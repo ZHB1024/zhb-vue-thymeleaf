@@ -63,13 +63,12 @@ var myVue =  new Vue({
 	 },
 	  methods:{
 		   handleSubmit:function (name) {
-			   myVue.$refs[name].validate((valid) => {
+			   myVue.$refs[name].validate(function(valid)  {
 				   if (valid){
 					   let param = new URLSearchParams(); 
 		          	  	param.append("id",myVue.iconInfo.id); 
 		          	  	param.append("name",myVue.iconInfo.name); 
 		          	  	param.append("value",myVue.iconInfo.value); 
-		          	  	debugger;
 		          	  	axios.post('/htgl/iconinfocontroller/updateiconinfo/api', param)
 		          		  	 .then(function (response) {
 		          			  	 if(response.data.flag){

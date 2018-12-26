@@ -80,7 +80,7 @@ var myVue = new Vue({
             	title: '附件', 
             	key: 'thumbnailUrl',
             	width: 100,
-            	render: (h, params) => {
+            	render: function(h, params){
             	    return h('div',  [
             	        h('a', {
             	          			props: {
@@ -114,7 +114,7 @@ var myVue = new Vue({
               	            					color:'green'
               	          			},
                             		on: {
-                                			click: () => {
+                                			click: function() {
                                 	  						myVue.downAttachment(params)
                                 			}
                             		}
@@ -127,14 +127,14 @@ var myVue = new Vue({
                 key: 'fileName',
                 minWidth: 100,
                 sortable:true,
-                render: (h, params) => {
+                render: function(h, params){
                 	return h('div', [
                 		h('a', {
                             style: {
                                 marginRight: '5px'
                             },
                             on: {
-                                click: () => {
+                                click: function() {
                                 	  myVue.showinfo(params)
                                 }
                             }
@@ -152,7 +152,7 @@ var myVue = new Vue({
                 key: 'likeDegree',
                 minWidth: 150,
                 align: "center",
-                render: (h, params) => {
+                render: function(h, params){
                 	var colorFlag = 'green';
                 	var leftEditorFlag,rightEditorFlag ;
                 	if('1' == params.row.likeDegree){
@@ -173,7 +173,7 @@ var myVue = new Vue({
                             },
                             class: "left-btn",
                             on: {
-                              click: () => {
+                              click: function(){
                                 this.myVue.upLikeDegree(params.index,-1);
                               }
                             }
@@ -193,7 +193,7 @@ var myVue = new Vue({
                             },
                             class: "right-btn",
                             on: {
-                              click: () => {
+                              click: function(){
                                 this.myVue.upLikeDegree(params.index,1);
                               }
                             }
@@ -212,7 +212,7 @@ var myVue = new Vue({
                 key: 'action',
                 width: 150,
                 align: 'center',
-                render: (h, params) => {
+                render: function(h, params){
                 	return h('div', [
                         h('i-button', {
                             props: {
@@ -220,7 +220,7 @@ var myVue = new Vue({
                                 size: 'small'
                             },
                             on: {
-                                click: () => {
+                                click: function(){
                                 	  myVue.remove(params.index)
                                 }
                             }
@@ -241,7 +241,7 @@ var myVue = new Vue({
     		  flushPage(attachmentinfoResp.data.data);
     		  //myVue.typeParm = typeResp.data.data;
     		 // 在修改数据之后使用 $nextTick，则可以在回调中获取更新后的 DOM
-    		  myVue.$nextTick(() => {
+    		  myVue.$nextTick(function() {
     			  $(".group").colorbox({
     	            	photo:true,
     	                height: "80%",
@@ -273,7 +273,7 @@ var myVue = new Vue({
        				 		 myVue.tableDatas = response.data.data.result;
        				 		 flushPage(response.data.data);
        				  		 myVue.$forceUpdate();
-       				  		 myVue.$nextTick(() => {
+       				  		 myVue.$nextTick(function(){
        	    			  			$(".group").colorbox({
        	    	            				photo:true,
        	    	                			height: "80%",
@@ -312,7 +312,7 @@ var myVue = new Vue({
     				  myVue.tableDatas = response.data.data.result;
     				  flushPage(response.data.data);
     				  myVue.$forceUpdate();
-    				  myVue.$nextTick(() => {
+    				  myVue.$nextTick(function() {
     	    			  $(".group").colorbox({
     	    	            	photo:true,
     	    	                height: "80%",
@@ -343,7 +343,7 @@ var myVue = new Vue({
     				  myVue.tableDatas = response.data.data.result;
     				  flushPage(response.data.data);
     				  myVue.$forceUpdate();
-    				  myVue.$nextTick(() => {
+    				  myVue.$nextTick(function() {
     	    			  $(".group").colorbox({
     	    	            	photo:true,
     	    	                height: "80%",
@@ -374,7 +374,7 @@ var myVue = new Vue({
     				  myVue.tableDatas = response.data.data.result;
     				  flushPage(response.data.data);
     				  myVue.$forceUpdate();
-    				  myVue.$nextTick(() => {
+    				  myVue.$nextTick(function() {
     	    			  $(".group").colorbox({
     	    	            	photo:true,
     	    	                height: "80%",

@@ -10,15 +10,15 @@
 </i-header>
 
 <script>
-new Vue({
+var headerVue = new Vue({
 	el: '#app_header',
     data:function (){
     	return {
     		personalinfo:'/htgl/userinfocontroller/toselfinfo',
         	loginout:'/htgl/userinfocontroller/exit',
+        	logoName:'',
         	realname:'',
-        	headUrl:'',
-        	logoName:''
+        	headUrl:''
     	}
     },
     mounted: function () {
@@ -28,19 +28,19 @@ new Vue({
   		  method:'get',
   		  url:'/htgl/userinfocontroller/getselfinfo/api',
   		  responseType:'json'
-  		}).then((response) => {
-  			this.realname=response.data.data.realName;
-  			this.headUrl='/htgl/attachmentinfocontroller/getoriginalattachmentinfo?id=' + response.data.data.lobId;
+  		}).then(function(response) {
+  			headerVue.realname=response.data.data.realName;
+  			headerVue.headUrl='/htgl/attachmentinfocontroller/getoriginalattachmentinfo?id=' + response.data.data.lobId;
   		});
     },
     created: function () {
-    	axios({
+    	 axios({
     		  method:'get',
     		  url:'/commoncontroller/getlogoname',
     		  responseType:'json'
-    		}).then((response) => {
-    			this.logoName=response.data.data;
-    		});
+    		}).then(function(response) {
+    			headerVue.logoName=response.data.data;
+    		}); 
     }
 });
 </script>

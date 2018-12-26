@@ -129,7 +129,7 @@ var myVue =  new Vue({
                 		duration: 4,
                 		closable: true
             		});
-        		   this.$refs.upload.fileList = this.$refs.upload.fileList.filter(item => {
+        		   this.$refs.upload.fileList = this.$refs.upload.fileList.filter(function(item) {
                  		return item.uid != file.uid
              	   });
         	   }

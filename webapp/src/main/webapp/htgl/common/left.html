@@ -24,7 +24,7 @@
 <script>
 var COOKIE_NAME = "MenuCookie";
 var COOKIE_PATH = "/";
-new Vue({
+var leftVue = new Vue({
       el: '#app_menu',
       data: {
     	  //menu:[{"children":[{"name":"时间管理","id":"jbjl_sjgl","url":"/jb/worktime/getselfworkrecordindex"},{"name":"预览提交","id":"jbjl_ylsb","url":"/jb/worktime/getselfworkdayndex"}],"name":"加班记录","id":"jbjl","url":null}],
@@ -47,8 +47,8 @@ new Vue({
     		  method:'get',
     		  url:'/htgl/authoritycontroller/getfunctions/api',
     		  responseType:'json'
-    		}).then((response) => {
-    			this.menu=response.data.data;
+    		}).then(function(response) {
+    			leftVue.menu=response.data.data;
     		});
       },
       created: function () {

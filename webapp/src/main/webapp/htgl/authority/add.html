@@ -90,7 +90,7 @@ var myVue =  new Vue({
 	 },
 	  methods:{
 		   handleSubmit:function (name) {
-			   myVue.$refs[name].validate((valid) => {
+			   myVue.$refs[name].validate(function(valid) {
 				   if (valid){
 					    let param = new URLSearchParams(); 
 		          	  	param.append("userId",myVue.authority.userId); 
