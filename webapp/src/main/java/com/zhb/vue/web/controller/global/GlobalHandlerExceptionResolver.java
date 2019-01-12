@@ -54,12 +54,12 @@ public class GlobalHandlerExceptionResolver implements HandlerExceptionResolver,
 
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
-            Exception ex) {
+            Exception exception) {
         
-        String exceptionMessage = ExceptionUtil.getExceptionMessage(ex);
+        String exceptionMessage = ExceptionUtil.getExceptionMessage(exception);
         logger.error(exceptionMessage);
         Map<String, Object> model = new HashMap<String, Object>();
-        model.put("errorMessage", "1234");
+        model.put("errorMessage", exception.getMessage());
         return new ModelAndView("error/index", model);
     }
     
