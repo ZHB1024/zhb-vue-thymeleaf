@@ -39,6 +39,12 @@
 .filter-box .add-btn {
 	float: right;
 }
+.filter-box .left-btn {
+	float: left;
+}
+.filter-box .right-btn {
+	float: right;
+}
 
 .ivu-table-cell {
 	padding-left: 10px;

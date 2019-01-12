@@ -271,6 +271,7 @@ public class Data2JSONUtil {
             }
             
             jsonObject.put("children", jbjlChildrenMenu);
+            jsonObject.put("_expanded", false);//默认全部不展开
             
             jsonArray.add(jsonObject);
             

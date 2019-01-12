@@ -12,6 +12,8 @@
         
         <i-content :style="{padding: '24px', background: '#fff'}">
         	<div class="filter-box clearfix">
+                <i-button type="primary" class="left-btn" @click="expandAll">{{expandText}}</i-button>
+                
                 <i-button type="success" class="add-btn" to="/htgl/functioninfocontroller/toadd">新增功能</i-button>
             </div>
         	<i-table border :columns="columns1" :data="tableDatas" class="expand-table"></i-table> 
@@ -30,6 +32,8 @@ var myVue = new Vue({
     el: '#app_content',
     data:{
     	tableDatas:[],
+    	expandText: "全部展开",
+        expandFlag: false,
     	columns1:[
     		{
             	type: 'expand',
@@ -199,7 +203,22 @@ var myVue = new Vue({
                onCancel:function(){
                }
             });
-       }
+       },
+       expandAll: function() {
+           if (this.expandFlag == false) {
+             for (var i = 0; i < this.tableDatas.length; i++) {
+               this.tableDatas[i]._expanded = true;
+             }
+             this.expandText = "全部收起";
+             this.expandFlag = true;
+           } else {
+             for (var i = 0; i < this.tableDatas.length; i++) {
+               this.tableDatas[i]._expanded = false;
+             }
+             this.expandText = "全部展开";
+             this.expandFlag = false;
+           }
+         }
       
     }
 });
