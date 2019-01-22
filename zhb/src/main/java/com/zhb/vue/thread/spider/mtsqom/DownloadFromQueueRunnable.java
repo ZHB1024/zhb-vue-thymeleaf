@@ -36,7 +36,7 @@ public class DownloadFromQueueRunnable implements Runnable {
     private AtomicInteger totalCount = new AtomicInteger(0);
     private AtomicInteger shutdowmFlag = new AtomicInteger(0);
     
-    private ActiveMQClient activeMqClient = ActiveMQClientFactory.getRedisClientBean();
+    private ActiveMQClient activeMqClient = ActiveMQClientFactory.getActiveClientBean();
     private AttachmentInfoService attachmentInfoService = ServiceFactory.getAttachmentInfoService();
     
     public DownloadFromQueueRunnable(String name,String queueName,String userId) {

@@ -25,7 +25,7 @@ public class ReadEndUrlToQueueRunnable implements Runnable {
     private String url;
     private AtomicInteger totalCount = new AtomicInteger(0);
     
-    private ActiveMQClient activeMqClient = ActiveMQClientFactory.getRedisClientBean();
+    private ActiveMQClient activeMqClient = ActiveMQClientFactory.getActiveClientBean();
     
     public ReadEndUrlToQueueRunnable(String name,String queueName,String url,int beginPage,int endPage) {
         this.name = name;

@@ -35,7 +35,7 @@ public class MQController {
     
     private Logger logger = LoggerFactory.getLogger(MQController.class);
     
-    private ActiveMQClient activeMqClient = ActiveMQClientFactory.getRedisClientBean();
+    private ActiveMQClient activeMqClient = ActiveMQClientFactory.getActiveClientBean();
     private Destination activeMqDestination = ActiveMQClientFactory.getMQDestinationBean();
     
     //private KafkaTemplate kafkaProducerTemplate = KafkaFactory.getKafkaProducerTemplateBean();

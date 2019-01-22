@@ -5,12 +5,15 @@ import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.zhb.forever.framework.dic.AttachmentTypeEnum;
 import com.zhb.forever.framework.dic.DeleteFlagEnum;
 import com.zhb.forever.framework.dic.LikeDgreeEnum;
 
@@ -30,6 +33,7 @@ public class AttachmentInfoData implements Serializable{
     private String thumbnailPath;
     private String contentType;
     private Integer type;
+    //private AttachmentTypeEnum type;
     private Integer deleteFlag;
     private Integer likeDegree;
     private Calendar createTime;
@@ -106,6 +110,16 @@ public class AttachmentInfoData implements Serializable{
     public void setType(Integer type) {
         this.type = type;
     }
+    
+    /*@Column(name = "type",nullable=false)
+    @Enumerated(EnumType.ORDINAL)
+    public AttachmentTypeEnum getType() {
+        return type;
+    }
+    
+    public void setType(AttachmentTypeEnum type) {
+        this.type = type;
+    }*/
 
     @Column(name = "delete_flag",nullable=false)
     public Integer getDeleteFlag() {
