@@ -28,6 +28,8 @@
 	font-size: 25px;
 }
 
+.layout-logo a{color:hsla(0,0%,100%,.7)}
+
 .layout-nav {
 	float: right;
 }

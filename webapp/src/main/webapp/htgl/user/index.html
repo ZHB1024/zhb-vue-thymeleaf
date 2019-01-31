@@ -15,12 +15,59 @@ li {list-style-type:none;}
         </Breadcrumb> 
         
         <i-content :style="{padding: '24px', background: '#fff'}">
-        	
-        	<div class="filter-box clearfix">
+            
+            <div class="filter-box clearfix">
                 <i-button type="success" class="add-btn" to="/htgl/userinfocontroller/toadd">新增用户</i-button>
             </div>
-        	
-        	<i-table border :columns="columns1" :data="tableDatas" ></i-table> 
+            
+            <i-table border :columns="columns1" :data="tableDatas" ></i-table> 
+            
+            <!-- 显示个人信息详情 Modal -->
+            <Modal v-model="showDetail" :title="userDetail.userName" width="800">
+                <div >
+                    <table align="center">
+                        <tr>
+                            <th>姓名：</td>
+                            <td>{{userDetail.realName}}</td>
+                        </tr>
+                        <tr>
+                            <th>性别：</td>
+                            <td>{{userDetail.sex}}</td>
+                        </tr>
+                        <tr>
+                            <th>身份证号：</td>
+                            <td>{{userDetail.identityCard}}</td>
+                        </tr>
+                        <tr>
+                            <th>出生日期：</td>
+                            <td>{{userDetail.birthday}}</td>
+                        </tr>
+                        <tr>
+                            <th>国家/地区：</td>
+                            <td>{{userDetail.country}}</td>
+                        </tr>
+                        <tr>
+                            <th>民族：</td>
+                            <td>{{userDetail.nation}}</td>
+                        </tr>
+                        <tr>
+                            <th>毕业院校：</td>
+                            <td>{{userDetail.byyx}}</td>
+                        </tr>
+                        <tr>
+                            <th>手机号：</td>
+                            <td>{{userDetail.mobilePhone}}</td>
+                        </tr>
+                        <tr>
+                            <th>电子邮箱：</td>
+                            <td>{{userDetail.email}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div slot="footer">
+                    <i-button type="primary" @click="showDetail=fals">确 定</i-button>
+                </div>
+            </Modal>
         </i-content>
         
     </Layout>
@@ -31,9 +78,11 @@ li {list-style-type:none;}
 var myVue = new Vue({
     el: '#app_content',
     data:{
-    	tableDatas:[],
-    	columns1:[
-    		{
+        tableDatas:[],
+        showDetail:false,
+        userDetail:'',
+        columns1:[
+            {
                 title: '序号',
                 type:"index",
                 width: 70
@@ -43,14 +92,14 @@ var myVue = new Vue({
                 key: 'userName',
                 minWidth: 100,
                 render: function(h, params)  {
-                	return h('div', [
-                		h('a', {
+                    return h('div', [
+                        h('a', {
                             style: {
                                 marginRight: '5px'
                             },
                             on: {
                                 click: function()  {
-                                	  myVue.showinfo(params)
+                                      myVue.showinfoModal(params)
                                 }
                             }
                         }, params.row.userName)
@@ -84,15 +133,15 @@ var myVue = new Vue({
                 width: 150,
                 align: 'center',
                 render: function(h, params)  {
-                	var status = myVue.tableDatas[params.index].deleteFlag,openFlag,delFlag;
-                	if(status == 0 ){
-                		openFlag = 'disabled';
-                	}
-                	if(status == 1 ){
-                		delFlag = 'disabled';
-                	}
-                	return h('div', [
-                		h('i-button', {
+                    var status = myVue.tableDatas[params.index].deleteFlag,openFlag,delFlag;
+                    if(status == 0 ){
+                        openFlag = 'disabled';
+                    }
+                    if(status == 1 ){
+                        delFlag = 'disabled';
+                    }
+                    return h('div', [
+                        h('i-button', {
                             props: {
                                 type: 'primary',
                                 size: 'small',
@@ -103,7 +152,7 @@ var myVue = new Vue({
                             },
                             on: {
                                 click: function()  {
-                                	  myVue.open(params.index)
+                                      myVue.open(params.index)
                                 }
                             }
                         }, '开通'),
@@ -115,7 +164,7 @@ var myVue = new Vue({
                             },
                             on: {
                                 click: function()  {
-                                	  myVue.remove(params.index)
+                                      myVue.remove(params.index)
                                 }
                             }
                         }, '注销')
@@ -125,72 +174,72 @@ var myVue = new Vue({
         ]
     },
     created: function () {
-    	axios.all([
-    	    axios.get('/htgl/userinfocontroller/getuserinfo/api')
-    	  ]).then(axios.spread(function (userinfoResp) {
-    		  myVue.tableDatas = userinfoResp.data.data;
-    	  }));
+        axios.all([
+            axios.get('/htgl/userinfocontroller/getuserinfo/api')
+          ]).then(axios.spread(function (userinfoResp) {
+              myVue.tableDatas = userinfoResp.data.data;
+          }));
     },
     methods: {
-    	//重新开通账号
-    	open: function (index) {
-        	this.$Modal.confirm({
+        //重新开通账号
+        open: function (index) {
+            this.$Modal.confirm({
                 title: '提示',
                 content: '您确定要重新开通这个账号么？',
                 onOk:function(){
-                	let param = new URLSearchParams(); 
-              	    param.append("id",myVue.tableDatas[index].id); 
-              	    param.append("deleteFlag",0); 
-              	    axios.post('/htgl/userinfocontroller/deloropenaccount/api', param)
-        		         .then(function (response) {
-        			  		if(response.data.flag){
-        			  			myVue.$Message.success({
+                    let param = new URLSearchParams(); 
+                      param.append("id",myVue.tableDatas[index].id); 
+                      param.append("deleteFlag",0); 
+                      axios.post('/htgl/userinfocontroller/deloropenaccount/api', param)
+                         .then(function (response) {
+                              if(response.data.flag){
+                                  myVue.$Message.success({
                                     content: "开通成功",
                                     duration: 3,
                                     closable: true
                                 });
-        				 		 myVue.tableDatas = response.data.data;
-        				  		 myVue.$forceUpdate();
-                      		}else{
-                    	  		myVue.$Message.error({
-                              		content: response.data.errorMessages,
-                              		duration: 3,
-                              		closable: true
-                          		});
-                      		}
-        		  		})
+                                  myVue.tableDatas = response.data.data;
+                                   myVue.$forceUpdate();
+                              }else{
+                                  myVue.$Message.error({
+                                      content: response.data.errorMessages,
+                                      duration: 3,
+                                      closable: true
+                                  });
+                              }
+                          })
                 },
                 onCancel:function(){
                 }
              });
-      	},
-      	//注销账号
+          },
+          //注销账号
        remove: function (index) {
         this.$Modal.confirm({
             title: '提示',
             content: '您确定要注销这个账号么？',
             onOk:function(){
-            	let param = new URLSearchParams(); 
-          	    param.append("id",myVue.tableDatas[index].id); 
-          	    param.append("deleteFlag",1); 
-          	    axios.post('/htgl/userinfocontroller/deloropenaccount/api', param)
-    		         .then(function (response) {
-    			  		if(response.data.flag){
-    			  			myVue.$Message.success({
+                let param = new URLSearchParams(); 
+                  param.append("id",myVue.tableDatas[index].id); 
+                  param.append("deleteFlag",1); 
+                  axios.post('/htgl/userinfocontroller/deloropenaccount/api', param)
+                     .then(function (response) {
+                          if(response.data.flag){
+                              myVue.$Message.success({
                                 content: "注销成功",
                                 duration: 3,
                                 closable: true
                             });
-    				 		 myVue.tableDatas = response.data.data;
-    				  		 myVue.$forceUpdate();
-                  		}else{
-                	  		myVue.$Message.error({
-                          		content: response.data.errorMessages,
-                          		duration: 3,
-                          		closable: true
-                      		});
-                  		}
-    		  		})
+                              myVue.tableDatas = response.data.data;
+                               myVue.$forceUpdate();
+                          }else{
+                              myVue.$Message.error({
+                                  content: response.data.errorMessages,
+                                  duration: 3,
+                                  closable: true
+                              });
+                          }
+                      })
             },
             onCancel:function(){
             }
@@ -200,34 +249,39 @@ var myVue = new Vue({
        /*0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）*/
        /*弹出层*/
        showinfo:function(data){
-    	   var showContent = '<table align="center" style="border-collapse:separate; border-spacing:10px;">';
+           var showContent = '<table align="center" style="border-collapse:separate; border-spacing:10px;">';
 
-    	   showContent += generatorValue("用户名",data.row.userName);
-    	   showContent += generatorValue("姓名",data.row.realName);
-    	   showContent += generatorValue("性别",data.row.sex);
-    	   showContent += generatorValue("身份证号",data.row.identityCard);
-    	   showContent += generatorValue("出生日期",data.row.birthday);
-    	   showContent += generatorValue("国家/地区",data.row.country);
-    	   showContent += generatorValue("民族",data.row.nation);
-    	   showContent += generatorValue("毕业院校",data.row.byyx);
-    	   showContent += generatorValue("手机号",data.row.mobilePhone);
-    	   showContent += generatorValue("电子邮箱",data.row.email);
-    	   
-    	   showContent += '</table>';
-    	   
-    	   layer.open({
-    	        title: data.row.userName,
-    	        type: 1,
-    	        //skin: 'layui-layer-rim', //加上边框
-    	        area: ['500px', '500px'], //宽高
-    	        content: showContent, 
-    	        btn: ['确定'],
-    	        success: function(layero, index){
-    	        },
-    	        yes: function(index, layero){
-    	            layer.closeAll();
-    	        }
-    	    });
+           showContent += generatorValue("用户名",data.row.userName);
+           showContent += generatorValue("姓名",data.row.realName);
+           showContent += generatorValue("性别",data.row.sex);
+           showContent += generatorValue("身份证号",data.row.identityCard);
+           showContent += generatorValue("出生日期",data.row.birthday);
+           showContent += generatorValue("国家/地区",data.row.country);
+           showContent += generatorValue("民族",data.row.nation);
+           showContent += generatorValue("毕业院校",data.row.byyx);
+           showContent += generatorValue("手机号",data.row.mobilePhone);
+           showContent += generatorValue("电子邮箱",data.row.email);
+           
+           showContent += '</table>';
+           
+           layer.open({
+                title: data.row.userName,
+                type: 1,
+                //skin: 'layui-layer-rim', //加上边框
+                area: ['500px', '500px'], //宽高
+                content: showContent, 
+                btn: ['确定'],
+                success: function(layero, index){
+                },
+                yes: function(index, layero){
+                    layer.closeAll();
+                }
+            });
+       },
+       /*弹出层，显示详细个人信息*/
+       showinfoModal:function(data){
+           myVue.userDetail = data.row;
+           myVue.showDetail = true;
        }
     }
 });
