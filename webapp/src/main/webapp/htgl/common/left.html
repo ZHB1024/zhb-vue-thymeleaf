@@ -1,78 +1,94 @@
 <div id="app_menu" style="float:left;">
-<!-- <Sider hide-trigger :style="{background: '#fff'}"> 
-    <i-menu v-bind:active-name="childId" theme="light" width="auto" @on-select="selectMenu"  :open-names="[parentId]" >
-        <Submenu v-bind:name="index+1" v-for="parent,index in menu">
-            <template slot="title"> 
-                <Icon v-bind:type="parent.icon"></Icon> {{ parent.name }}
-            </template> 
-            <Menu-item v-for="child in parent.children" v-bind:to="child.path" v-bind:name="index+1+ '--' + child.id" >{{ child.name }}</Menu-item> 
-            
-        </Submenu>
-    </i-menu>
-</Sider> -->
 
-<i-menu active-name="childId" @on-select="selectMenu">
+<!-- <i-menu active-name="childId" @on-select="selectMenu">
    <Menu-Group :title="parent.name" v-for="parent,index in menu">
         <Menu-Item v-bind:name="index+1+ '--' + child.id" v-for="child in parent.children" v-bind:to="child.path">
             <Icon v-bind:type="child.icon" /></Icon>
             <span>{{ child.name }}</span>
         </Menu-Item>
    </Menu-Group>
+   
+</i-menu> -->
+
+<i-menu :accordion="true" :active-name="childId" ref="side_menu" @on-select="selectMenu" :open-names="parentId" >
+        <Submenu :name="parent.index" v-for="parent in menu" :key ="parent.id">
+            <template slot="title">
+                {{ parent.name }}
+            </template>
+            <Menu-item v-for="child in parent.children" v-bind:to="child.path" :name="parent.index + '--' + child.id" :key="child.id">
+                <Icon v-bind:type="child.icon" /></Icon>
+                <span>{{ child.name }}</span>
+            </Menu-item>
+        </Submenu>
 </i-menu>
 
 </div>
 <script>
-var COOKIE_NAME = "MenuCookie";
-var COOKIE_PATH = "/";
 var leftVue = new Vue({
       el: '#app_menu',
       data: {
-    	  //menu:[{"children":[{"name":"时间管理","id":"jbjl_sjgl","url":"/jb/worktime/getselfworkrecordindex"},{"name":"预览提交","id":"jbjl_ylsb","url":"/jb/worktime/getselfworkdayndex"}],"name":"加班记录","id":"jbjl","url":null}],
     	  menu:[],
-    	  parentId:null,
-    	  childId:null
+          parentId: [],
+          childId: ""
       },
       methods: {
     	  selectMenu:function (name) {
-    		  console.log(name)
     		  var values = name.split("--");
-    		  var parentId= values[0];
-    		  var childId= values[1];
-    		  var cookieValue = parentId + "--" + childId;
-    		  document.cookie=COOKIE_NAME+ "=" +escape(cookieValue)
+              var parentId= values[0];
+              var childId= values[1];
+              var cookieValue = parentId + "--" + childId;
+              var storage = window.sessionStorage;
+              storage["childId"] = cookieValue;
+              storage["parentId"] = parentId;
     	  }
       } ,
       beforeCreate: function(){
+    	  var _this = this;
     	  axios({
     		  method:'get',
     		  url:'/htgl/authoritycontroller/getfunctions/api',
     		  responseType:'json'
     		}).then(function(response) {
-    			leftVue.menu=response.data.data;
+    			var tempArr = response.data.data;
+                for (var i = 0; i < tempArr.length; i++) {
+                    tempArr[i]["index"] = tempArr[i]["index"] + "";
+                }
+                _this.menu = response.data.data;
+                _this.$nextTick(function() {
+                    _this.$refs.side_menu.updateOpened();
+                    _this.$refs.side_menu.updateActiveName();
+                })
     		});
       },
       created: function () {
-    	  //获取点击的菜单
-    	  if (document.cookie.length>0){
-    		  var c_start=document.cookie.indexOf(COOKIE_NAME + "=")
-    		  if (c_start!=-1)
-    		  { 
-    		    c_start=c_start + COOKIE_NAME.length+1 
-    		    c_end=document.cookie.indexOf(";",c_start)
-    		    if (c_end==-1) c_end=document.cookie.length
-    		    var cookieValue = unescape(document.cookie.substring(c_start,c_end))
-    		    var values = cookieValue.split("--");
-    		    console.log(cookieValue);
-    		    this.parentId=values[0];
-    		    this.childId=cookieValue;
-    		  }else{
-    			  console.log("没有找到cookie");
-    		  }
-    	  }else{
-			  console.log("没有找到cookie");
-		  } 
-          console.log("菜单初始化--加载中...TODO")
-      } 
+      },
+      mounted: function () {
+          var storage = window.sessionStorage;
+          var _this = this;
+          this.childId = storage.childId;
+          this.parentId = [];
+          this.parentId.push(storage.parentId);
+          this.$nextTick(function() {
+              _this.$refs.side_menu.updateOpened();
+              _this.$refs.side_menu.updateActiveName();
+          })
+          window.onload = function(){
+              document.getElementById('app_menu').style.minHeight = (document.documentElement.offsetHeight - 120) + "px";
+          }
+          var locationStr = window.location.href;
+          var cutStr = locationStr.substr(22);
+          switch (cutStr) {
+              case "/htgl/userinfocontroller/toselfinfo":      //个人信息
+                  this.childId = "";
+                  this.parentId = [];
+                  break;
+              case "/":                           //首页
+                  this.childId = "";
+                  this.parentId = [];
+                  break;
+          }
+
+      }
 });
 
 </script>

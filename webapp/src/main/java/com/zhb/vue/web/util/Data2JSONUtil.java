@@ -311,6 +311,7 @@ public class Data2JSONUtil {
                 vo.setName(parent.getName());
                 vo.setPath(parent.getPath());
                 vo.setIconName(null == parent.getIconInfoData()?"":parent.getIconInfoData().getValue());
+                vo.setOrder(parent.getOrder());
                 List<ComparatorVO> childs = new ArrayList<>();
                 for(FunctionInfoData funData : childrens){
                     ComparatorVO child = new ComparatorVO(funData.getOrder());
@@ -318,6 +319,7 @@ public class Data2JSONUtil {
                     child.setName(funData.getName());
                     child.setPath(funData.getPath());
                     child.setIconName(null==funData.getIconInfoData()?"":funData.getIconInfoData().getValue());
+                    child.setOrder(funData.getOrder());
                     childs.add(child);
                 }
                 //排序,对子菜单排序
@@ -336,6 +338,7 @@ public class Data2JSONUtil {
                 jsonObject.put("path", comparatorVO.getPath());
                 jsonObject.put("name", comparatorVO.getName());
                 jsonObject.put("icon", comparatorVO.getIconName());
+                jsonObject.put("index", comparatorVO.getOrder());
                 
                 JSONArray jbjlChildrenMenu = new JSONArray();
                 for(ComparatorVO funData : comparatorVO.getChilds()){
@@ -344,6 +347,7 @@ public class Data2JSONUtil {
                     json.put("path", funData.getPath());
                     json.put("name", funData.getName());
                     json.put("icon", funData.getIconName());
+                    json.put("index", funData.getOrder());
                     jbjlChildrenMenu.add(json);
                 }
                 
