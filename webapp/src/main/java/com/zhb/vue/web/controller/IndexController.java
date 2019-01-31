@@ -23,6 +23,7 @@ public class IndexController {
     @Transactional
     public String index(HttpServletRequest request,HttpServletResponse response) {
         if (StringUtil.isBlank(WebAppUtil.getUserId(request))) {
+            logger.info("请登录");
             return "login/login";
         }
         return "htgl/index";
