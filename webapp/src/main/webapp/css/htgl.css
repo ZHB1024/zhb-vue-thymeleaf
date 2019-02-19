@@ -75,6 +75,11 @@
 	color: #fff;
 }
 
+/* 结果行 背景色 */
+.ivu-table .demo-table-manager-row td{ 
+    background-color: #b4a8c2;
+}
+
 /* 授权管理 */
 .add-person .ivu-form-item {
 	display: inline-block;

@@ -16,7 +16,7 @@
                 
                 <i-button type="success" class="add-btn" to="/htgl/functioninfocontroller/toadd">新增功能</i-button>
             </div>
-        	<i-table border :columns="columns1" :data="tableDatas" class="expand-table"></i-table> 
+            <i-table :row-class-name="rowClassName" border :columns="columns1" :data="tableDatas" class="expand-table"></i-table> 
         </i-content>
         
     </Layout>
@@ -218,6 +218,13 @@ var myVue = new Vue({
              this.expandText = "全部展开";
              this.expandFlag = false;
            }
+         },
+         rowClassName: function(row, index) {
+             if (row.color === 'blue') {
+                 return 'demo-table-manager-row';
+             }else{
+                 return '';
+             }
          }
       
     }
