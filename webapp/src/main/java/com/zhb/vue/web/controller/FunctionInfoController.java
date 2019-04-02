@@ -184,7 +184,8 @@ public class FunctionInfoController {
         }
         
         JSONObject object = Data2JSONUtil.functionInfoData2JSONObject(data);
-        model.addAttribute("functionInfoJson", object);
+        request.setAttribute("functionInfoJson", object);
+        //model.addAttribute("functionInfoJson",object);
         
         return "htgl/function/update";
     }
