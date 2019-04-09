@@ -8,18 +8,25 @@
 	
 	<title>清风舞明月</title>
 
-    <link rel="stylesheet" href="/css/iview.css">
-    <script src="https://t1.chei.com.cn/common/js/vue/2.5.6/vue.js"></script>
-    <script src="/js/iview-3.0.0.js"></script>
-    <script src="/js/axios.min.js"></script>
+    <!-- 兼容IE -->
+    <script src="/js/URLSearchParams-Polyfill.js"></script>
+    <script src="/js/polyfill.min.js"></script>
+    
+    <!-- jQuery -->
     <script src="/js/jquery-3.3.1.js"></script>
-
-	<link rel="stylesheet" type="text/css" href="/css/my.css">
+    
+    <!-- 自定义 -->
+    <script src="/js/common.js"></script>
+    
+    <!-- vue -->
+    <link rel="stylesheet" href="/css/iview.css">
+    <script src="/js/vue.js"></script>
+    <!-- <script src="https://t1.chei.com.cn/common/js/vue/2.5.6/vue.js"></script> -->
+    <script src="/js/iview-3.0.0.js"></script>
 
 </head>
 
 <body>
-
 	<div id="header" th:insert="/common/header">
 	</div>
     <div id="body">
@@ -31,5 +38,7 @@
 </body>
 <script type="text/javascript" >
     $("#body").css('minHeight',$(window).height()-$("#header").height()-$("#footer").height());
+</script>
+<script type="text/javascript" layout:fragment="script">
 </script>
 </html>

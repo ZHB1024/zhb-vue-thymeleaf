@@ -1,18 +1,44 @@
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/error_layout}">
- 
-<div layout:fragment="content">
-<table width="760" border="0" align="center" cellpadding="0" cellspacing="0">
-    <tr>
-        <td style=" background-position:center; background-repeat:no-repeat; color:#FF0000;font-weight:600;font-size:20px; letter-spacing:2px; font-family:'楷体_utf-8'" height="400" align="center" valign="middle">
-	        系统异常
-        	<br /><br />
-	        <span style="font-size:15;padding-right:14px;">
-	         <a href="javascript:history.go(-1)">返回</a>
-	        </span>
-        </td>
-    </tr>
-</table>
-</div>     
+<html >
+<head>
+	<meta content="text/html" charset="UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0,user-scalable=no"/>
+	
+	<title>清风舞明月</title>
+
+    <!-- 兼容IE -->
+    <script src="/js/URLSearchParams-Polyfill.js"></script>
+    <script src="/js/polyfill.min.js"></script>
+    
+    <!-- jQuery -->
+    <script src="/js/jquery-3.3.1.js"></script>
+    
+    <!-- 自定义 -->
+    <script src="/js/common.js"></script>
+    
+    <!-- vue -->
+    <link rel="stylesheet" href="/css/iview.css">
+    <script src="/js/vue.js"></script>
+    <!-- <script src="https://t1.chei.com.cn/common/js/vue/2.5.6/vue.js"></script> -->
+    <script src="/js/iview-3.0.0.js"></script>
+</head>
+
+<body>
+<div id="app_content" >
+    <div align="center">{{errorMsg}}</div>
+</div>
+</body>
+
+<script >
+var myVue =  new Vue({
+      el: '#app_content',
+      data:{
+          errorMsg:'[[${errorMsg}]]'
+      },
+      created: function () {
+     },
+      methods:{
+      }
+});
+</script>  
 </html>

@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.util.WebUtils;
 
-import com.zhb.vue.web.Constant;
+import com.zhb.vue.Constant;
 import com.zhb.vue.web.vo.LoginInfoVO;
 
 public class WebAppUtil {

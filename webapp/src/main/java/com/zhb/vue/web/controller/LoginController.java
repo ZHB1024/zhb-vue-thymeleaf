@@ -24,6 +24,7 @@ import com.zhb.forever.framework.util.PropertyUtil;
 import com.zhb.forever.framework.util.RandomUtil;
 import com.zhb.forever.framework.util.StringUtil;
 import com.zhb.forever.framework.vo.MailVO;
+import com.zhb.vue.Constant;
 import com.zhb.vue.dic.FunctionTypeEnum;
 import com.zhb.vue.dic.VerificationCodeTypeEnum;
 import com.zhb.vue.params.UserInfoParam;
@@ -65,6 +66,7 @@ public class LoginController {
     @Transactional
     public String toLogin(HttpServletRequest request,HttpServletResponse response, Model model) {
         logger.info(String.valueOf(request.getAttribute("redirectUrl")));
+        logger.info(String.valueOf(request.getAttribute(Constant.REQUEST_ERROR)));
         model.addAttribute("redirectUrl", request.getAttribute("redirectUrl"));
         return "login/login";
     }
