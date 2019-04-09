@@ -1,6 +1,5 @@
 package com.zhb.vue.web.controller.global;
 
-import com.zhb.forever.framework.exception.ExceptionUtil;
 import com.zhb.vue.Constant;
 
 import java.util.HashMap;
@@ -9,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -29,15 +27,11 @@ public class GlobalHandlerExceptionResolver implements HandlerExceptionResolver,
     
     private int order = Ordered.HIGHEST_PRECEDENCE;
     
-    @Autowired
-    public GlobalHandlerExceptionResolver() {
-    }
-
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
             Exception exception) {
-        
         logger.error(exception.getMessage());
+        exception.printStackTrace();
         Map<String, Object> model = new HashMap<String, Object>();
         model.put(Constant.REQUEST_ERROR, exception.getMessage());
         return new ModelAndView("error/index", model);
