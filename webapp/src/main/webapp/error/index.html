@@ -24,7 +24,8 @@
 
 <body>
 <div id="app_content" >
-    <div align="center" th:text="${errorMsg}"></div>
+    <div align="center" th:text="'00'+ ${errorMsg}"></div>
+    <div align="center" th:utext="${errorMsg}"></div>
 </div>
 </body>
 

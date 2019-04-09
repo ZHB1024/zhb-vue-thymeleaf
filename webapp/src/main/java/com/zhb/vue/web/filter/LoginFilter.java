@@ -26,9 +26,9 @@ public class LoginFilter implements Filter {
             throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) arg0;
         LoginInfoVO loginUserVO = WebAppUtil.getLoginInfoVO(request);
-        if (null == loginUserVO || null != loginUserVO.getUserInfoVO()) {
+        if (null == loginUserVO || null == loginUserVO.getUserInfoVO()) {
             String ctxPath = request.getContextPath();
-            request.setAttribute(Constant.REQUEST_ERROR, "登陆后才能访问系统");
+            request.setAttribute(Constant.REQUEST_ERROR, "<b>登陆后才能访问系统</b>");
             request.setAttribute("redirectUrl", request.getRequestURL());
             HttpServletResponse response = (HttpServletResponse) arg1;
             //请求转发,共享的是同一个request，整个过程是一个请求，一个响应。
