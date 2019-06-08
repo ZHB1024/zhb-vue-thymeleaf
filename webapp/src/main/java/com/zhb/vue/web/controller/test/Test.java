@@ -1,7 +1,11 @@
 package com.zhb.vue.web.controller.test;
 
+import java.io.FileInputStream;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
+
+import com.zhb.forever.framework.util.StringUtil;
 
 /**
 *@author   zhanghb<a href="mailto:zhb20111503@126.com">zhanghb</a>
@@ -15,9 +19,29 @@ public class Test {
     static {
         System.out.println("test static{}");
     }
+    
+    static {
+        String property = System.getenv("propertyPath");
+        if (StringUtil.isBlank(property)) {
+            System.out.println("环境变量未配置propertyPath");
+        }else {
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(property);
+                Properties properties = new Properties();
+                properties.load(fis);
+                String logo = properties.getProperty("sys.logo.name");
+                System.out.println(logo);
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
     public Test(String name) {
         System.out.println("test constructor");
     }
+    
     
     public static void main(String[] args) {
         //setTest();
