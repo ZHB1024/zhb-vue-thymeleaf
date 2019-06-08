@@ -341,6 +341,7 @@ public class LoginController {
             //用户信息
             UserInfoData data = new UserInfoData();
             data.setUserName("root");
+            data.setEmail("zhb20111503@126.com");
             String salt = RandomUtil.getRandomString(8);
             data.setPassword(PasswordUtil.encrypt("root", PasswordUtil.DEFAULT_PASSWORD, PasswordUtil.generateSalt(salt)));
             data.setSalt(salt);
@@ -350,6 +351,7 @@ public class LoginController {
             IconInfoData iconInfoData = new IconInfoData();
             iconInfoData.setName("用户管理");
             iconInfoData.setValue("ios-person");
+            iconInfoData.setCreateUserId(data.getId());
             iconInfoService.saveOrUpdate(iconInfoData);
             
             //功能信息
@@ -359,6 +361,7 @@ public class LoginController {
             root.setPath("userinfocontroller");
             root.setIconInfoData(iconInfoData);
             root.setOrder(1);
+            root.setCreateUserId(data.getId());
             functionInfoService.saveOrUpdateFunctionInfoData(root);
             
             FunctionInfoData children = new FunctionInfoData();
@@ -367,6 +370,7 @@ public class LoginController {
             children.setPath("/htgl/userinfocontroller/searchuserinfo");
             children.setOrder(2);
             children.setParentFunctionInfo(root);
+            children.setCreateUserId(data.getId());
             functionInfoService.saveOrUpdateFunctionInfoData(children);
             
             //人员功能关系
@@ -374,7 +378,6 @@ public class LoginController {
             userFunctionInfoData.setUserInfoData(data);
             userFunctionInfoData.setFunctionInfoData(children);
             functionInfoService.saveOrUpdateUserFunctionInfoData(userFunctionInfoData);
-            
             
             WriteJSUtil.writeJS("init root success", response);
         }
