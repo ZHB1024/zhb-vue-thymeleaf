@@ -202,5 +202,37 @@ public class JsoupSpiderController {
         ajaxData.setFlag(true);
         return ajaxData;
     }
+    
+    //https://gaokao.chsi.com.cn/sch/search--ss-on,searchType-1,option-qg,start-20.dhtml
+    @RequestMapping(value="/spidervcg",method=RequestMethod.POST)
+    @ResponseBody
+    @Transactional
+    public AjaxData spiderVCG(HttpServletRequest request,HttpServletResponse response){
+        AjaxData ajaxData = new AjaxData();
+        String baseUrl = "https://www.vcg.com/creative/search?page=2&phrase=风景";
+        
+        Document document = JsoupUtil.getDocumentByUrl(baseUrl);
+        if (null != document) {
+            Elements elements = JsoupUtil.getElementsByDocumentClass(document, "gallery_inner");
+            if (null != elements && elements.size() > 0) {
+                Elements srcs = JsoupUtil.getElementsBySelect(elements.get(0), "img[src]");
+                if (null != srcs) {
+                    int num = 0;
+                    for (Element element : srcs) {
+                        String src = JsoupUtil.getElementsByAttr(element, "abs:src");
+                        try {
+                            DownloadUtil.downLoadFromUrl(src, num + ".jpg", JsoupUtil.IMAGE_BASE_SAVE_PATH);
+                        } catch (IOException e) {
+                            logger.error(e.getMessage(),e);
+                        }
+                        num++;
+                    }
+                }
+            }
+        }
+        ajaxData.setFlag(true);
+        return ajaxData;
+    }
+    
 
 }

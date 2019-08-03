@@ -20,6 +20,7 @@ li {list-style-type:none;}
                     	<i-button type="primary" @click="handleSubmit('formInline')" > 摩天轮社区 </i-button>
                     	<i-button type="primary" @click="handleSubmit2('formInline')" > 千百撸 </i-button>
                     	<i-button type="primary" @click="handleSubmit3('formInline')" > 院校 </i-button>
+                    	<i-button type="primary" @click="handleSubmit4('formInline')" > 视觉中国过 </i-button>
                 </form-item>
         	</i-form>
 	</i-content>
@@ -73,6 +74,25 @@ var myVue = new Vue({
         handleSubmit3:function(name) {
         	let param = new URLSearchParams(); 
      	  	axios.post('/htgl/jsoupspidercontroller/spideryx', param)
+     		  	.then(function (response) {
+     			  	if(response.data.flag){
+     			  		myVue.$Message.success({
+                            content: "爬取成功，稍后查看结果......",
+                            duration: 3,
+                            closable: true
+                        });
+                   }else{
+                 	  myVue.$Message.error({
+                           content: response.data.errorMessages,
+                           duration: 3,
+                           closable: true
+                       });
+                   }
+     		  })
+        },
+        handleSubmit4:function(name) {
+        	let param = new URLSearchParams(); 
+     	  	axios.post('/htgl/jsoupspidercontroller/spidervcg', param)
      		  	.then(function (response) {
      			  	if(response.data.flag){
      			  		myVue.$Message.success({
