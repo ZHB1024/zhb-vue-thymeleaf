@@ -30,6 +30,7 @@ public class ProducerDecoration extends Producer implements Runnable{
     private int currentPage = 0;
     private final String url;
     private AtomicInteger totalCount = new AtomicInteger(0);
+    private StringBuilder sb = new StringBuilder();
     
     public ProducerDecoration(RingBuffer<KeyValueVO> ringBuffer, String name, int beginPage, int endPage, String url) {
         super(ringBuffer, name);
@@ -97,18 +98,19 @@ public class ProducerDecoration extends Producer implements Runnable{
             return;
         }
         
-        String[]  urlsArray = urls.split("|");
+        String[]  urlsArray = urls.split("\\|");
         if (null == urlsArray || urlsArray.length == 0) {
             return;
         }
         
         int i = 1;
-        StringBuilder name = new StringBuilder(currentPage);
+        StringBuilder name = new StringBuilder();
         for (String url : urlsArray) {
             name.append(currentPage).append("_").append(childIndex).append("_").append(i).append(".jpg");
            //向ringBuffer中添加资源 
             pushData(name.toString(),url);
             i++;
+            name.setLength(0);
         }
         
          
@@ -122,7 +124,10 @@ public class ProducerDecoration extends Producer implements Runnable{
             vo.setValue(value);
         }finally {
             ringBuffer.publish(sequence);
-            logger.info("生产者-" + name + "：发布成功------第 " + currentPage + " 页，第 " + totalCount.incrementAndGet() + " 个" );
+            sb.append("生产者-").append(name).append("：发布成功------第").append(currentPage);
+            sb.append("页，第").append(totalCount.incrementAndGet()).append("个 , ").append(value);
+            logger.info(sb.toString());
+            sb.setLength(0);
         }
     }
 
