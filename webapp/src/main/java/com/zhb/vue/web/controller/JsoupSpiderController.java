@@ -1,7 +1,6 @@
 package com.zhb.vue.web.controller;
 
 import java.io.IOException;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -12,14 +11,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.alibaba.fastjson.JSONObject;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.zhb.forever.framework.util.AjaxData;
 import com.zhb.forever.framework.util.DownloadUtil;
-import com.zhb.forever.framework.util.JsoupUtil;
 import com.zhb.forever.framework.util.PropertyUtil;
 import com.zhb.forever.framework.vo.KeyValueVO;
 import com.zhb.forever.mq.disruptor.DisruptorUtil;
+import com.zhb.vue.thread.spider.SpiderProperty;
+import com.zhb.vue.thread.spider.decoration.ConsumerDecoration;
+import com.zhb.vue.thread.spider.decoration.ProducerDecoration;
 import com.zhb.vue.thread.spider.mtsqom.DownloadFromQueueRunnable;
 import com.zhb.vue.thread.spider.mtsqom.ReadEndUrlToQueueRunnable;
 import com.zhb.vue.thread.spider.mtsqom.disruptor.ConsumerDisruptor;
@@ -29,9 +29,6 @@ import com.zhb.vue.thread.spider.qbl.ReadUrlToQueueRunnable;
 import com.zhb.vue.thread.spider.yx.SpiderYXRunnable;
 import com.zhb.vue.web.util.WebAppUtil;
 
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -203,33 +200,40 @@ public class JsoupSpiderController {
         return ajaxData;
     }
     
-    //https://gaokao.chsi.com.cn/sch/search--ss-on,searchType-1,option-qg,start-20.dhtml
     @RequestMapping(value="/spidervcg",method=RequestMethod.POST)
     @ResponseBody
     @Transactional
     public AjaxData spiderVCG(HttpServletRequest request,HttpServletResponse response){
         AjaxData ajaxData = new AjaxData();
-        String baseUrl = "https://www.vcg.com/creative/search?page=2&phrase=风景";
+        String url = SpiderProperty.getSpiderUrl();
         
-        Document document = JsoupUtil.getDocumentByUrl(baseUrl);
-        if (null != document) {
-            Elements elements = JsoupUtil.getElementsByDocumentClass(document, "gallery_inner");
-            if (null != elements && elements.size() > 0) {
-                Elements srcs = JsoupUtil.getElementsBySelect(elements.get(0), "img[src]");
-                if (null != srcs) {
-                    int num = 0;
-                    for (Element element : srcs) {
-                        String src = JsoupUtil.getElementsByAttr(element, "abs:src");
-                        try {
-                            DownloadUtil.downLoadFromUrl(src, num + ".jpg", JsoupUtil.IMAGE_BASE_SAVE_PATH);
-                        } catch (IOException e) {
-                            logger.error(e.getMessage(),e);
-                        }
-                        num++;
-                    }
-                }
+        int beginPage = 1;
+        int endPage = SpiderProperty.getSpiderTotalPage();
+        int totalThread = 3;
+        int per = endPage/totalThread;
+        
+        Disruptor<KeyValueVO> disruptor = DisruptorUtil.getDisruptor();
+        ConsumerDecoration[] consumerDisruptors = new ConsumerDecoration[totalThread];
+        AtomicInteger consumeTotalNum = new AtomicInteger(0);
+        for(int i=0;i < totalThread;i++) {
+            consumerDisruptors[i] = new ConsumerDecoration("消费者-"+(i+1), consumeTotalNum);
+        }
+        disruptor.handleEventsWithWorkerPool(consumerDisruptors);
+        disruptor.start();
+        
+        ExecutorService es = Executors.newFixedThreadPool(totalThread);
+        for(int i=0;i<totalThread;i++) {
+            if(i != totalThread-1) {
+                ProducerDecoration producer = new ProducerDecoration(disruptor.getRingBuffer(),"生产者"+(i+1) ,beginPage+(i*per),beginPage+(i*per)+per-1,url);
+                es.execute(producer);
+            }else {
+                ProducerDecoration producer = new ProducerDecoration(disruptor.getRingBuffer(),"生产者"+(i+1) ,beginPage+(i*per),endPage,url);
+                es.execute(producer);
             }
         }
+        es.shutdown();
+        disruptor.shutdown();
+        
         ajaxData.setFlag(true);
         return ajaxData;
     }
