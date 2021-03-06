@@ -42,7 +42,7 @@ public class ConsumerDecoration extends Consumer {
             return;
         }
         
-        logger.info("消费者-"+ name + " 下载成功****************第 " + totalCount.incrementAndGet() + " 个");
+        //logger.info("消费者-"+ name + " 下载成功****************第 " + totalCount.incrementAndGet() + " 个");
     }
 
 }

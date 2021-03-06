@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.zhb.forever.framework.ftp.FTPUtil;
-import com.zhb.forever.framework.ftp.FtpClient;
+/*import com.zhb.forever.framework.ftp.FTPUtil;
+import com.zhb.forever.framework.ftp.FtpClient;*/
 import com.zhb.forever.framework.util.AjaxData;
 import com.zhb.forever.framework.util.StringUtil;
 import com.zhb.vue.web.util.WebAppUtil;
@@ -51,8 +51,8 @@ public class FtpController {
             ajaxData.addMessage("请先登录");
             return ajaxData;
         }
-        FtpClient ftpClient = new FtpClient();
-        FTPUtil.listFiles(ftpClient);
+        //FtpClient ftpClient = new FtpClient();
+        //FTPUtil.listFiles(ftpClient);
         ajaxData.setFlag(true);
         return ajaxData;
     }

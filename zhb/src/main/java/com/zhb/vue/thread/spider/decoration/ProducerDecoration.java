@@ -81,7 +81,7 @@ public class ProducerDecoration extends Producer implements Runnable{
     }
     
     private void addChildPageImagePath(String childPath,int childIndex) {
-        if (StringUtil.isBlank(childPath)) {
+        /*if (StringUtil.isBlank(childPath)) {
             return;
         }
         
@@ -112,7 +112,7 @@ public class ProducerDecoration extends Producer implements Runnable{
             i++;
             name.setLength(0);
         }
-        
+        */
          
     }
     
